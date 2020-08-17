@@ -25,6 +25,7 @@
 var NAVTREE =
 [
   [ "CMD Friend", "index.html", [
+    [ "CMD_Friend - The Command line friend library!", "index.html#autotoc_md0", null ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],

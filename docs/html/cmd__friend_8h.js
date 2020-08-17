@@ -20,9 +20,8 @@ var cmd__friend_8h =
     ] ],
     [ "cdmf_parse_options", "cmd__friend_8h.html#ae2e3c7f53479b1ebc43cf051b70ab9f9", null ],
     [ "default_options_parser", "cmd__friend_8h.html#a0e27a2875f4489f279d7d7d63adc9aef", null ],
-    [ "cmdf_default_info_contact_info", "cmd__friend_8h.html#a17f75a76450f5452e5c265b9cf0d88e8", null ],
-    [ "cmdf_default_info_usage", "cmd__friend_8h.html#a0309e967d39cef84be366fb132262852", null ],
-    [ "cmdf_default_info_version", "cmd__friend_8h.html#a5a685e11f0a2618a19aed6d5b903cff4", null ],
-    [ "default_options", "cmd__friend_8h.html#a80cf8cf2ebd66c3ec4995739afff3f55", null ],
-    [ "default_options_lenght", "cmd__friend_8h.html#aca3d0dff220bef4cfee1cb0b41fbaa41", null ]
+    [ "set_cmdf_default_info_contact_info", "cmd__friend_8h.html#ab3f4268c8a19fb46f8efe86b51f104bb", null ],
+    [ "set_cmdf_default_info_usage", "cmd__friend_8h.html#ab14c8e1d80d178ce0e8e8a3936d1efec", null ],
+    [ "set_cmdf_default_info_version", "cmd__friend_8h.html#abf1a7ca4f27b5cb7bb5d6420431131fe", null ],
+    [ "default_options", "cmd__friend_8h.html#a80cf8cf2ebd66c3ec4995739afff3f55", null ]
 ];

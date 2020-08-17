@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>CMD Friend: cmd_friend.c File Reference</title>
+<title>CMD Friend: C:/C_projetos/cmd_friend/modules/cmd_friend/cmd_friend.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">CMD Friend
-   &#160;<span id="projectnumber">1.0</span>
+   &#160;<span id="projectnumber">1.1</span>
    </div>
    <div id="projectbrief">Simple command line arguments parser for C and C++ applications</div>
   </td>
@@ -84,6 +84,7 @@ $(document).ready(function(){initNavTree('cmd__friend_8c.html',''); initResizabl
 
 <div class="header">
   <div class="summary">
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -94,6 +95,12 @@ $(document).ready(function(){initNavTree('cmd__friend_8c.html',''); initResizabl
 </div>
 <p><a href="cmd__friend_8c_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a5065352ac4de4e127df023cca4edb1e5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmd__friend_8c.html#a5065352ac4de4e127df023cca4edb1e5">DEFAULT_OPTIONS_LENGHT</a>&#160;&#160;&#160;3</td></tr>
+<tr class="memdesc:a5065352ac4de4e127df023cca4edb1e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default options array lenght.  <a href="cmd__friend_8c.html#a5065352ac4de4e127df023cca4edb1e5">More...</a><br /></td></tr>
+<tr class="separator:a5065352ac4de4e127df023cca4edb1e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ac819a0b7a9070a49e2298fb00e47850a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmd__friend_8c.html#ac819a0b7a9070a49e2298fb00e47850a">is_letter</a> (int character)</td></tr>
@@ -108,17 +115,30 @@ Functions</h2></td></tr>
 <tr class="memitem:a0e27a2875f4489f279d7d7d63adc9aef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmd__friend_8c.html#a0e27a2875f4489f279d7d7d63adc9aef">default_options_parser</a> (char key, <a class="el" href="structcmdf__options.html">cmdf_options</a> user_options[])</td></tr>
 <tr class="memdesc:a0e27a2875f4489f279d7d7d63adc9aef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default option parser.  <a href="cmd__friend_8c.html#a0e27a2875f4489f279d7d7d63adc9aef">More...</a><br /></td></tr>
 <tr class="separator:a0e27a2875f4489f279d7d7d63adc9aef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab14c8e1d80d178ce0e8e8a3936d1efec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmd__friend_8c.html#ab14c8e1d80d178ce0e8e8a3936d1efec">set_cmdf_default_info_usage</a> (const char *info_string)</td></tr>
+<tr class="memdesc:ab14c8e1d80d178ce0e8e8a3936d1efec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set default value of cmdf_default_info_usage.  <a href="cmd__friend_8c.html#ab14c8e1d80d178ce0e8e8a3936d1efec">More...</a><br /></td></tr>
+<tr class="separator:ab14c8e1d80d178ce0e8e8a3936d1efec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf1a7ca4f27b5cb7bb5d6420431131fe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmd__friend_8c.html#abf1a7ca4f27b5cb7bb5d6420431131fe">set_cmdf_default_info_version</a> (const char *info_string)</td></tr>
+<tr class="memdesc:abf1a7ca4f27b5cb7bb5d6420431131fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set default value of cmdf_default_info_version.  <a href="cmd__friend_8c.html#abf1a7ca4f27b5cb7bb5d6420431131fe">More...</a><br /></td></tr>
+<tr class="separator:abf1a7ca4f27b5cb7bb5d6420431131fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3f4268c8a19fb46f8efe86b51f104bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmd__friend_8c.html#ab3f4268c8a19fb46f8efe86b51f104bb">set_cmdf_default_info_contact_info</a> (const char *info_string)</td></tr>
+<tr class="memdesc:ab3f4268c8a19fb46f8efe86b51f104bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set default value of cmdf_default_info_contact.  <a href="cmd__friend_8c.html#ab3f4268c8a19fb46f8efe86b51f104bb">More...</a><br /></td></tr>
+<tr class="separator:ab3f4268c8a19fb46f8efe86b51f104bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2e3c7f53479b1ebc43cf051b70ab9f9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmd__friend_8c.html#ae2e3c7f53479b1ebc43cf051b70ab9f9">cdmf_parse_options</a> (<a class="el" href="structcmdf__options.html">cmdf_options</a> registered_options[], <a class="el" href="cmd__friend_8h.html#ae515e2c2ff2548a7e88b81a1672b66e0">option_parse_function</a> parse_function, int argc, char **argv, <a class="el" href="cmd__friend_8h.html#a00a3488d65237f72a5baa3239b844716">cdmf_PARSER_FLAGS_Typedef</a> flags, void *extern_user_variables_struct)</td></tr>
+<tr class="memdesc:ae2e3c7f53479b1ebc43cf051b70ab9f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main library function, used to parse options in main program. The "cdmf_parse_options" function will call the user defined function to handle actions as desired. Each call will have a key and argument, where each argument must have be assigned to only one key.  <a href="cmd__friend_8c.html#ae2e3c7f53479b1ebc43cf051b70ab9f9">More...</a><br /></td></tr>
 <tr class="separator:ae2e3c7f53479b1ebc43cf051b70ab9f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a74094a35049cb959ecb51e816f19e165"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmd__friend_8c.html#a74094a35049cb959ecb51e816f19e165">cmdf_default_info_usage</a> = NULL</td></tr>
+<tr class="separator:a74094a35049cb959ecb51e816f19e165"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f62997c982b696406aebc74525bfb11"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmd__friend_8c.html#a9f62997c982b696406aebc74525bfb11">cmdf_default_info_version</a> = NULL</td></tr>
+<tr class="separator:a9f62997c982b696406aebc74525bfb11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfdaee0d1920f3aeb21aa56d77e40c08"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmd__friend_8c.html#abfdaee0d1920f3aeb21aa56d77e40c08">cmdf_default_info_contact_info</a> = NULL</td></tr>
+<tr class="separator:abfdaee0d1920f3aeb21aa56d77e40c08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80cf8cf2ebd66c3ec4995739afff3f55"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcmdf__options.html">cmdf_options</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmd__friend_8c.html#a80cf8cf2ebd66c3ec4995739afff3f55">default_options</a> []</td></tr>
 <tr class="memdesc:a80cf8cf2ebd66c3ec4995739afff3f55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default options array, every option shall always have zero arguments. Modify if necessary.  <a href="cmd__friend_8c.html#a80cf8cf2ebd66c3ec4995739afff3f55">More...</a><br /></td></tr>
 <tr class="separator:a80cf8cf2ebd66c3ec4995739afff3f55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca3d0dff220bef4cfee1cb0b41fbaa41"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cmd__friend_8c.html#aca3d0dff220bef4cfee1cb0b41fbaa41">default_options_lenght</a> = 3</td></tr>
-<tr class="memdesc:aca3d0dff220bef4cfee1cb0b41fbaa41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default options array lenght.  <a href="cmd__friend_8c.html#aca3d0dff220bef4cfee1cb0b41fbaa41">More...</a><br /></td></tr>
-<tr class="separator:aca3d0dff220bef4cfee1cb0b41fbaa41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>CMD_Friend - The Command line friend library!</p>
@@ -127,7 +147,26 @@ Variables</h2></td></tr>
 <p>This is the source file, please don't modify, except when stated in documentation. </p>
 
 <p class="definition">Definition in file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
-</div><h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a5065352ac4de4e127df023cca4edb1e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5065352ac4de4e127df023cca4edb1e5">&#9670;&nbsp;</a></span>DEFAULT_OPTIONS_LENGHT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEFAULT_OPTIONS_LENGHT&#160;&#160;&#160;3</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Default options array lenght. </p>
+
+<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00030">30</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a id="ae2e3c7f53479b1ebc43cf051b70ab9f9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae2e3c7f53479b1ebc43cf051b70ab9f9">&#9670;&nbsp;</a></span>cdmf_parse_options()</h2>
 
@@ -178,7 +217,20 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00160">160</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
+<p>Main library function, used to parse options in main program. The "cdmf_parse_options" function will call the user defined function to handle actions as desired. Each call will have a key and argument, where each argument must have be assigned to only one key. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">registered_options</td><td>Receives pointer to struct "cmdf_options" array that shall contain user define options. </td></tr>
+    <tr><td class="paramname">parse_function</td><td>User defined parse function pointer. </td></tr>
+    <tr><td class="paramname">argc</td><td>Main function parameter containing number of passed parameters in command line. </td></tr>
+    <tr><td class="paramname">argv</td><td>Main function parameter containing the array of string containing the actual parameters. </td></tr>
+    <tr><td class="paramname">flags</td><td>Flags used to customize the function "cdmf_parse_options" behavior, flags shall be located on "cdmf_PARSER_FLAGS_Typedef" enumerator. </td></tr>
+    <tr><td class="paramname">extern_user_variables_struct</td><td>Opaque pointer to user define struct in main program, used to be accessed in the also user define parser function. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00228">228</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
 
 </div>
 </div>
@@ -217,7 +269,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00109">109</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00131">131</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
 
 </div>
 </div>
@@ -262,7 +314,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00080">80</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00102">102</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
 
 </div>
 </div>
@@ -290,7 +342,91 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00049">49</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00071">71</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
+
+</div>
+</div>
+<a id="ab3f4268c8a19fb46f8efe86b51f104bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3f4268c8a19fb46f8efe86b51f104bb">&#9670;&nbsp;</a></span>set_cmdf_default_info_contact_info()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void set_cmdf_default_info_contact_info </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>info_string</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set default value of cmdf_default_info_contact. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">info_string</td><td>Const string with desired information. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00211">211</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
+
+</div>
+</div>
+<a id="ab14c8e1d80d178ce0e8e8a3936d1efec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab14c8e1d80d178ce0e8e8a3936d1efec">&#9670;&nbsp;</a></span>set_cmdf_default_info_usage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void set_cmdf_default_info_usage </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>info_string</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set default value of cmdf_default_info_usage. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">info_string</td><td>Const string with desired information. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00193">193</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
+
+</div>
+</div>
+<a id="abf1a7ca4f27b5cb7bb5d6420431131fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf1a7ca4f27b5cb7bb5d6420431131fe">&#9670;&nbsp;</a></span>set_cmdf_default_info_version()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void set_cmdf_default_info_version </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>info_string</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set default value of cmdf_default_info_version. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">info_string</td><td>Const string with desired information. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00202">202</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
 
 </div>
 </div>
@@ -329,11 +465,62 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00063">63</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00085">85</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="abfdaee0d1920f3aeb21aa56d77e40c08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfdaee0d1920f3aeb21aa56d77e40c08">&#9670;&nbsp;</a></span>cmdf_default_info_contact_info</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* cmdf_default_info_contact_info = NULL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>String defining the contact info when using default option &ndash;info </p>
+
+<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00049">49</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
+
+</div>
+</div>
+<a id="a74094a35049cb959ecb51e816f19e165"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74094a35049cb959ecb51e816f19e165">&#9670;&nbsp;</a></span>cmdf_default_info_usage</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* cmdf_default_info_usage = NULL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>String defining the usage info when using default option &ndash;help </p>
+
+<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00037">37</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
+
+</div>
+</div>
+<a id="a9f62997c982b696406aebc74525bfb11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f62997c982b696406aebc74525bfb11">&#9670;&nbsp;</a></span>cmdf_default_info_version</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* cmdf_default_info_version = NULL</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>String defining the version info when using default option &ndash;version </p>
+
+<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00043">43</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
+
+</div>
+</div>
 <a id="a80cf8cf2ebd66c3ec4995739afff3f55"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a80cf8cf2ebd66c3ec4995739afff3f55">&#9670;&nbsp;</a></span>default_options</h2>
 
@@ -347,48 +534,30 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= </div>
 <div class="line">{</div>
-<div class="line">    {<span class="stringliteral">&quot;help&quot;</span>,   <a class="code" href="cmd__friend_8h.html#a0b44259c9773e1b52971a6ab4022054d">_HELP_KEY</a>, <a class="code" href="cmd__friend_8h.html#a3e8ca51dc134ee7afa5e7b79503e95d3a4eaff09fbc7042cb05e653f98a5e2855">OPTION_OPTIONAL</a>, 0, <span class="stringliteral">&quot;Shows this help menu&quot;</span>},</div>
-<div class="line">    {<span class="stringliteral">&quot;info&quot;</span>,   <a class="code" href="cmd__friend_8h.html#a78408fea65812a64dea88201ac98df2f">_INFO_KEY</a>, <a class="code" href="cmd__friend_8h.html#a3e8ca51dc134ee7afa5e7b79503e95d3a4adbd1e70364982cd74ed0d787d4f299">OPTION_ALIAS</a>, 0, <span class="stringliteral">&quot;Shows information about he program&quot;</span>},</div>
-<div class="line">    {<span class="stringliteral">&quot;version&quot;</span>,   <a class="code" href="cmd__friend_8h.html#a698b2380d60994d16c7af6135f69843f">_VERSION_KEY</a>, <a class="code" href="cmd__friend_8h.html#a3e8ca51dc134ee7afa5e7b79503e95d3a4adbd1e70364982cd74ed0d787d4f299">OPTION_ALIAS</a>, 0, <span class="stringliteral">&quot;Shows program version&quot;</span>},</div>
+<div class="line">    {<span class="stringliteral">&quot;help&quot;</span>,    <a class="code" href="cmd__friend_8h.html#a0b44259c9773e1b52971a6ab4022054d">_HELP_KEY</a>,    <a class="code" href="cmd__friend_8h.html#a3e8ca51dc134ee7afa5e7b79503e95d3a4eaff09fbc7042cb05e653f98a5e2855">OPTION_OPTIONAL</a>, 0, <span class="stringliteral">&quot;Shows this help menu&quot;</span>},</div>
+<div class="line">    {<span class="stringliteral">&quot;info&quot;</span>,    <a class="code" href="cmd__friend_8h.html#a78408fea65812a64dea88201ac98df2f">_INFO_KEY</a>,    <a class="code" href="cmd__friend_8h.html#a3e8ca51dc134ee7afa5e7b79503e95d3a4adbd1e70364982cd74ed0d787d4f299">OPTION_ALIAS</a>,    0, <span class="stringliteral">&quot;Shows information about he program&quot;</span>},</div>
+<div class="line">    {<span class="stringliteral">&quot;version&quot;</span>, <a class="code" href="cmd__friend_8h.html#a698b2380d60994d16c7af6135f69843f">_VERSION_KEY</a>, <a class="code" href="cmd__friend_8h.html#a3e8ca51dc134ee7afa5e7b79503e95d3a4adbd1e70364982cd74ed0d787d4f299">OPTION_ALIAS</a>,    0, <span class="stringliteral">&quot;Shows program version&quot;</span>},</div>
 <div class="line">    {0}</div>
 <div class="line">}</div>
 </div><!-- fragment -->
 <p>Default options array, every option shall always have zero arguments. Modify if necessary. </p>
 <p>Default options array, every option shall always have zero arguments. </p>
 
-<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00029">29</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
-
-</div>
-</div>
-<a id="aca3d0dff220bef4cfee1cb0b41fbaa41"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aca3d0dff220bef4cfee1cb0b41fbaa41">&#9670;&nbsp;</a></span>default_options_lenght</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int default_options_lenght = 3</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Default options array lenght. </p>
-
-<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00041">41</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="cmd__friend_8c_source.html#l00056">56</a> of file <a class="el" href="cmd__friend_8c_source.html">cmd_friend.c</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<div class="ttc" id="acmd__friend_8h_html_a0b44259c9773e1b52971a6ab4022054d"><div class="ttname"><a href="cmd__friend_8h.html#a0b44259c9773e1b52971a6ab4022054d">_HELP_KEY</a></div><div class="ttdeci">#define _HELP_KEY</div><div class="ttdef"><b>Definition:</b> <a href="cmd__friend_8h_source.html#l00143">cmd_friend.h:142</a></div></div>
-<div class="ttc" id="acmd__friend_8h_html_a3e8ca51dc134ee7afa5e7b79503e95d3a4adbd1e70364982cd74ed0d787d4f299"><div class="ttname"><a href="cmd__friend_8h.html#a3e8ca51dc134ee7afa5e7b79503e95d3a4adbd1e70364982cd74ed0d787d4f299">OPTION_ALIAS</a></div><div class="ttdeci">@ OPTION_ALIAS</div><div class="ttdef"><b>Definition:</b> <a href="cmd__friend_8h_source.html#l00153">cmd_friend.h:153</a></div></div>
-<div class="ttc" id="acmd__friend_8h_html_a78408fea65812a64dea88201ac98df2f"><div class="ttname"><a href="cmd__friend_8h.html#a78408fea65812a64dea88201ac98df2f">_INFO_KEY</a></div><div class="ttdeci">#define _INFO_KEY</div><div class="ttdef"><b>Definition:</b> <a href="cmd__friend_8h_source.html#l00141">cmd_friend.h:140</a></div></div>
-<div class="ttc" id="acmd__friend_8h_html_a3e8ca51dc134ee7afa5e7b79503e95d3a4eaff09fbc7042cb05e653f98a5e2855"><div class="ttname"><a href="cmd__friend_8h.html#a3e8ca51dc134ee7afa5e7b79503e95d3a4eaff09fbc7042cb05e653f98a5e2855">OPTION_OPTIONAL</a></div><div class="ttdeci">@ OPTION_OPTIONAL</div><div class="ttdef"><b>Definition:</b> <a href="cmd__friend_8h_source.html#l00154">cmd_friend.h:154</a></div></div>
-<div class="ttc" id="acmd__friend_8h_html_a698b2380d60994d16c7af6135f69843f"><div class="ttname"><a href="cmd__friend_8h.html#a698b2380d60994d16c7af6135f69843f">_VERSION_KEY</a></div><div class="ttdeci">#define _VERSION_KEY</div><div class="ttdef"><b>Definition:</b> <a href="cmd__friend_8h_source.html#l00142">cmd_friend.h:141</a></div></div>
+<div class="ttc" id="acmd__friend_8h_html_a0b44259c9773e1b52971a6ab4022054d"><div class="ttname"><a href="cmd__friend_8h.html#a0b44259c9773e1b52971a6ab4022054d">_HELP_KEY</a></div><div class="ttdeci">#define _HELP_KEY</div><div class="ttdef"><b>Definition:</b> <a href="cmd__friend_8h_source.html#l00156">cmd_friend.h:155</a></div></div>
+<div class="ttc" id="acmd__friend_8h_html_a3e8ca51dc134ee7afa5e7b79503e95d3a4adbd1e70364982cd74ed0d787d4f299"><div class="ttname"><a href="cmd__friend_8h.html#a3e8ca51dc134ee7afa5e7b79503e95d3a4adbd1e70364982cd74ed0d787d4f299">OPTION_ALIAS</a></div><div class="ttdeci">@ OPTION_ALIAS</div><div class="ttdef"><b>Definition:</b> <a href="cmd__friend_8h_source.html#l00166">cmd_friend.h:166</a></div></div>
+<div class="ttc" id="acmd__friend_8h_html_a78408fea65812a64dea88201ac98df2f"><div class="ttname"><a href="cmd__friend_8h.html#a78408fea65812a64dea88201ac98df2f">_INFO_KEY</a></div><div class="ttdeci">#define _INFO_KEY</div><div class="ttdef"><b>Definition:</b> <a href="cmd__friend_8h_source.html#l00154">cmd_friend.h:153</a></div></div>
+<div class="ttc" id="acmd__friend_8h_html_a3e8ca51dc134ee7afa5e7b79503e95d3a4eaff09fbc7042cb05e653f98a5e2855"><div class="ttname"><a href="cmd__friend_8h.html#a3e8ca51dc134ee7afa5e7b79503e95d3a4eaff09fbc7042cb05e653f98a5e2855">OPTION_OPTIONAL</a></div><div class="ttdeci">@ OPTION_OPTIONAL</div><div class="ttdef"><b>Definition:</b> <a href="cmd__friend_8h_source.html#l00167">cmd_friend.h:167</a></div></div>
+<div class="ttc" id="acmd__friend_8h_html_a698b2380d60994d16c7af6135f69843f"><div class="ttname"><a href="cmd__friend_8h.html#a698b2380d60994d16c7af6135f69843f">_VERSION_KEY</a></div><div class="ttdeci">#define _VERSION_KEY</div><div class="ttdef"><b>Definition:</b> <a href="cmd__friend_8h_source.html#l00155">cmd_friend.h:154</a></div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="cmd__friend_8c.html">cmd_friend.c</a></li>
+    <li class="navelem"><a class="el" href="dir_e05d7e2b1ecd646af5bb94391405f3b5.html">modules</a></li><li class="navelem"><a class="el" href="dir_39e9b8d13670d9103e8b4bbfe7093594.html">cmd_friend</a></li><li class="navelem"><a class="el" href="cmd__friend_8c.html">cmd_friend.c</a></li>
     <li class="footer">Generated by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>

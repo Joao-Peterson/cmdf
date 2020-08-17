@@ -1,5 +1,4 @@
 var files_dup =
 [
-    [ "cmd_friend.c", "cmd__friend_8c.html", "cmd__friend_8c" ],
-    [ "cmd_friend.h", "cmd__friend_8h.html", "cmd__friend_8h" ]
+    [ "modules", "dir_e05d7e2b1ecd646af5bb94391405f3b5.html", "dir_e05d7e2b1ecd646af5bb94391405f3b5" ]
 ];
