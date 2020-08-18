@@ -12,11 +12,6 @@
 // keys for options that don't have alphabetical short keys 
 #define VSCODE_KEY 2 
 
-//default globals
-const char cmdf_default_info_usage[] = "Usage: [-w,-o,-f] for project or [-M,-m] for module [FILEPATH] [OPTIONS...]";
-const char cmdf_default_info_version[] = "v1.0 - 10/08/2020";
-const char cmdf_default_info_contact_info[] = "Repo: https://github.com/Joao-Peterson/CMD-Friend - Email: joco_zx@hotmail.com";
-
 //struct containing the program options of the command line.
 cmdf_options options[] = 
 {
@@ -91,8 +86,12 @@ int parse_options(char key, char *arg, int arg_pos, void *extern_user_variables_
 
 int main(int argc, char **argv)
 {
+    // set information for the default options
+    set_cmdf_default_info_usage("Usage: [-w,-o,-f] for project or [-M,-m] for module [FILEPATH] [OPTIONS...]");
+    //set_cmdf_default_info_version("v1.0 - 10/08/2020");
+    set_cmdf_default_info_contact_info("Repo: https://github.com/Joao-Peterson/CMD-Friend - Email: joco_zx@hotmail.com");
+
     struct arguments_info myvars;
-    int last_option_parsed;
     //default values
     myvars.filepath_project = NULL;
     myvars.filepath_module = NULL;

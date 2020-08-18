@@ -20,7 +20,34 @@ extern "C" {
 
 #include "cmd_friend.h"
 
+
+/* -------------------------------------------- Private Definitions ---------------------------------------------------- */
+
+/**
+ * @brief Default options array lenght.
+ */
+#define DEFAULT_OPTIONS_LENGHT 3
+
+
 /* -------------------------------------------- Private Globals -------------------------------------------------------- */
+
+/**
+ * String defining the usage info when using default option --help
+ */
+char *cmdf_default_info_usage = NULL;
+
+
+/**
+ * String defining the version info when using default option --version
+ */
+char *cmdf_default_info_version = NULL;
+
+
+/**
+ * String defining the contact info when using default option --info
+ */
+char *cmdf_default_info_contact_info = NULL;
+
 
 /**
  * @brief Default options array, every option shall always have zero arguments.
@@ -28,17 +55,12 @@ extern "C" {
  */
 cmdf_options default_options[] = 
 {
-    {"help",   _HELP_KEY, OPTION_OPTIONAL, 0, "Shows this help menu"},
-    {"info",   _INFO_KEY, OPTION_ALIAS, 0, "Shows information about he program"},
-    {"version",   _VERSION_KEY, OPTION_ALIAS, 0, "Shows program version"},
+    {"help",    _HELP_KEY,    OPTION_OPTIONAL, 0, "Shows this help menu"},
+    {"info",    _INFO_KEY,    OPTION_ALIAS,    0, "Shows information about he program"},
+    {"version", _VERSION_KEY, OPTION_ALIAS,    0, "Shows program version"},
     {0}
 }; 
 
-
-/**
- * @brief Default options array lenght.
- */
-int default_options_lenght = 3;
 
 /* -------------------------------------------- Private Functions ------------------------------------------------------ */
 
@@ -118,25 +140,45 @@ void default_options_parser(char key, cmdf_options user_options[])
     {
         case _HELP_KEY:     // --help
             i = 0;
-            printf("%s\n\n",cmdf_default_info_usage);
-            while(i < user_options_len)
+            if(cmdf_default_info_usage!=NULL)
+                printf("%s\n\n",cmdf_default_info_usage);
+
+            while(i < user_options_len) // User defined options
             {
                 if(!(user_options[i].parameters & OPTION_HIDDEN)) // if not hidden, (OPTION_HIDDEN)
+                {
                     if(is_letter(user_options[i].key))
                         printf("\t-%c ( --%s ): %s.\n", user_options[i].key, user_options[i].long_name, user_options[i].description);
                     else
                         printf("\t--%s : %s.\n", user_options[i].long_name, user_options[i].description);
+                }
 
                 i++;
             }
+
+            for(i = 0; i < DEFAULT_OPTIONS_LENGHT; i++) // Default options
+            {
+                if(!(default_options[i].parameters & OPTION_HIDDEN)) // if not hidden, (OPTION_HIDDEN)
+                {
+                    if(is_letter(default_options[i].key))
+                        printf("\t-%c ( --%s ): %s.\n", default_options[i].key, default_options[i].long_name, default_options[i].description);
+                    else
+                        printf("\t--%s : %s.\n", default_options[i].long_name, default_options[i].description);
+                }
+
+                i++;
+            }
+
             break;
 
         case _VERSION_KEY:  // --version
-            printf("%s\n",cmdf_default_info_version);
+            if(cmdf_default_info_version!=NULL)
+                printf("%s\n",cmdf_default_info_version);
             break;
 
         case _INFO_KEY:     // --info
-            printf("%s\n",cmdf_default_info_contact_info);
+            if(cmdf_default_info_contact_info!=NULL)
+                printf("%s\n",cmdf_default_info_contact_info);
             break;
     }
 
@@ -146,7 +188,33 @@ void default_options_parser(char key, cmdf_options user_options[])
 /* -------------------------------------------- Functions Implementations ---------------------------------------------- */
 
 /**
- * @fn
+ * @brief Set default value of cmdf_default_info_usage
+ */
+void set_cmdf_default_info_usage(const char *info_string)
+{
+    cmdf_default_info_usage = info_string;
+}
+
+
+/**
+ * @brief Set default value of cmdf_default_info_version
+ */
+void set_cmdf_default_info_version(const char *info_string)
+{
+    cmdf_default_info_version = info_string;
+}
+
+
+/**
+ * @brief Set default value of cmdf_default_info_contact
+ */
+void set_cmdf_default_info_contact_info(const char *info_string)
+{
+    cmdf_default_info_contact_info = info_string;
+}
+
+
+/**
  * @brief Main library function, used to parse options in main program.
  * The "cdmf_parse_options" function will call the user defined function to handle actions as desired.
  * Each call will have a key and argument, where each argument must have be assigned to only one key.
@@ -254,7 +322,7 @@ int cdmf_parse_options(cmdf_options registered_options[], option_parse_function 
                 current_argument += 2; // jump over "--"
 
                 j = 0;
-                while(j < default_options_lenght) // verify if its registered
+                while(j < DEFAULT_OPTIONS_LENGHT) // verify if its registered
                 {
                     if(!strcmp(default_options[j].long_name,current_argument))
                     {
@@ -276,7 +344,7 @@ int cdmf_parse_options(cmdf_options registered_options[], option_parse_function 
                 current_argument += 1; // jump over "-"
 
                 j = 0;
-                while(j < default_options_lenght) // verify if its registered
+                while(j < DEFAULT_OPTIONS_LENGHT) // verify if its registered
                 {
                     if(current_argument[0]==default_options[j].key) // compare keys and verify if registered
                     {
