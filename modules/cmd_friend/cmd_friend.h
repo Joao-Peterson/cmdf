@@ -208,7 +208,7 @@ typedef int (*option_parse_function)(char key, char *arg, int arg_pos, void *ext
 typedef struct
 {
     char *long_name;                                /**< The name of the option, also used when calling with "--" */
-    char key;                                       /**< Small char key correponding to the name, often just the first character. Called with "-". If the option doesn't need a alphabetical key then specify a integer value different from 0 as means to idetification */
+    char key;                                       /**< Small char key correponding to the name, often just the first character. Called with "-". If the option doesn't need a alphabetical key then specify a integer value ">0" and "!=(ASCII letter number)" as means to identification */
     cdmf_OPTIONS_Typedef parameters;                /**< Parameters to enhance functionality */
     int argq;                                       /**< The number of arguments that this option takes, can be >0, if 0 then expects none, if -1 accepts any quantity */
     char *description;                              /**< Small description of the option*/

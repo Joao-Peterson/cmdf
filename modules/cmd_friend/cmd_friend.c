@@ -185,6 +185,141 @@ void default_options_parser(char key, cmdf_options user_options[])
     return;
 }
 
+
+/**
+ * @brief Check for key in struct option array.
+ * @param key: Char key to be verified.
+ * @param options_array: Options array to check against.
+ */
+int is_option_registered(char key, cmdf_options options_array[])
+{
+    int i;
+    while(options_array[i].long_name != NULL) // the last element has null long name
+    {
+        if(options_array[i].key == key) // on key found, return true
+            return 1;
+
+        i++;
+    }
+
+    return 0; // no key found return 0
+}
+
+
+/**
+ * @brief Tweak options array, substituting aliases and duplicates, etc.
+ * @param options_array: Options array to check against.
+ * @param flags: Parser flags to be used in error handling inside function.
+ */
+cmdf_options *options_array_tweak(cmdf_options options_array[], cdmf_PARSER_FLAGS_Typedef flags)
+{
+    // to check for not optional options    
+    typedef struct{ char* alias; }options_matrix;
+    options_matrix *options_not_optional = malloc(sizeof(*options_not_optional)*0xFF+1); // 0xFF, biggest number in char, hence the vector should be able to hold that many
+    memset(options_not_optional, 0, sizeof(*options_not_optional)*0xFF); // just in case
+    char *options_passed = malloc(sizeof(*options_passed)*0xFF);
+    options_passed[0]='\0';
+    int flag_last_non_alias_was_optional_option = 0;
+
+    // to check for duplicate keys
+    char *all_keys = malloc(sizeof(*all_keys)*0xFF);
+    all_keys[0]='\0';
+    strcat_char(all_keys, _INFO_KEY);
+    strcat_char(all_keys, _VERSION_KEY);
+    strcat_char(all_keys, _HELP_KEY);
+
+    // to check for aliases
+    cmdf_options last_option = {0};
+
+    int i;
+
+
+
+
+    /* Create new array with default and user defined options to be parsed */
+
+    int options_len = 0;
+    int default_options_len = 0;
+
+    while(default_options[default_options_len].long_name != NULL) // default options lenght
+        default_options_len++;
+    
+    while(default_options[options_len].long_name != NULL)
+        options_len++;
+
+    realloc(default_options, sizeof(cmdf_options)*(default_options_len+options_len+1)); //realloc to acomodate new options
+
+    options_len = 0;
+    while(default_options_len < (default_options_len + options_len)) // copy elements
+    {
+        default_options[default_options_len] = options_array[options_len];
+        default_options_len++;
+    }
+    default_options[default_options_len].long_name = NULL; // last elemnt shall be zero
+
+    free(options_array); // free original user options
+    options_array = default_options; // make it point to new array
+
+
+
+
+    /* Run trought options, incrementing the size and substituting aliases, (OPTION_ALIAS). */
+
+    while(options_array[options_len].long_name != NULL)
+    {
+        if(strchr(all_keys, options_array[options_len].key) == NULL) // if the key is not a DUPLICATE
+            strcat_char(all_keys, options_array[options_len].key); // cat key
+        else
+            error_handler_parse_options_internal(flags, "The key -%c from option --%s is already registered by another option.\n", options_array[options_len].key, options_array[options_len].long_name);
+
+
+
+        if( (options_array[options_len].parameters & OPTION_NO_CHAR_KEY) && is_letter(options_array[options_len].key)) // if no char key, then it must check to see if the key is a non assci letter
+            error_handler_parse_options_internal(flags, "An option with (OPTION_NO_CHAR_KEY) specified must be a non ascii alphabetical character.\n");
+
+
+        if( !(options_array[options_len].parameters & OPTION_NO_CHAR_KEY) && !is_letter(options_array[options_len].key)) // if char key, then it must check to see if the key is a assci letter
+            error_handler_parse_options_internal(flags, "An option with a specified char key must be a ascii alphabetical character.\n");
+
+
+
+        if(!(options_array[options_len].parameters & OPTION_OPTIONAL) && !(options_array[options_len].parameters & OPTION_ALIAS))    // if not optional, !(OPTION_OPTIONAL)
+        {
+            flag_last_non_alias_was_optional_option = 0;
+            i++;
+            strcat_char((char*)(&options_not_optional[i].alias),options_array[options_len].key);
+        }
+        else if((options_array[options_len].parameters & OPTION_ALIAS) && flag_last_non_alias_was_optional_option == 0)   // if last option was non optional and this is a alias
+        {
+            strcat_char((char*)(&options_not_optional[i].alias),options_array[options_len].key);
+        }
+        else // if a new optional option appears, then stop adding aliases
+        {
+            flag_last_non_alias_was_optional_option = 1;
+        }
+        
+
+        if(options_array[options_len].parameters & OPTION_ALIAS) // check for aliases, (OPTION_ALIAS)
+        {
+            if(last_option.long_name == NULL) // if the first registered option is an alias, then its obvisually ilegal
+                error_handler_parse_options_internal(flags, "The first option must be a non alias option, an alias must be declared below a non alias option.\n");
+
+            options_array[options_len].parameters = last_option.parameters;
+            options_array[options_len].argq = last_option.argq;
+            options_array[options_len].description = malloc(strlen(last_option.description)+1); // allocate for empty pointer then copy
+            strcpy(options_array[options_len].description,last_option.description);
+        }
+        else
+        {
+            last_option = options_array[options_len];
+        }
+
+        /// REVER LOOP ACIMA E PARAMETROS QUE O LOOP RETORNA PARA A FUNÇÃO PODER RETORNA-LOS DEPOIS POR REFERÊNCIA
+        
+        options_len++;
+    }
+}
+
 /* -------------------------------------------- Functions Implementations ---------------------------------------------- */
 
 /**
@@ -254,59 +389,6 @@ int cdmf_parse_options(cmdf_options registered_options[], option_parse_function 
     cmdf_options last_option = {0};
 
 
-    // run trought options, incrementing the size and substituting aliases, (OPTION_ALIAS). 
-    while(registered_options[cmdf_options_len].long_name != NULL)
-    {
-        if(strchr(all_keys, registered_options[cmdf_options_len].key) == NULL) // if the key is not a DUPLICATE
-            strcat_char(all_keys, registered_options[cmdf_options_len].key); // cat key
-        else
-            error_handler_parse_options_internal(flags, "The key -%c from option --%s is already registered by another option.\n", registered_options[cmdf_options_len].key, registered_options[cmdf_options_len].long_name);
-
-
-
-        if( (registered_options[cmdf_options_len].parameters & OPTION_NO_CHAR_KEY) && is_letter(registered_options[cmdf_options_len].key)) // if no char key, then it must check to see if the key is a non assci letter
-            error_handler_parse_options_internal(flags, "An option with (OPTION_NO_CHAR_KEY) specified must be a non ascii alphabetical character.\n");
-
-
-        if( !(registered_options[cmdf_options_len].parameters & OPTION_NO_CHAR_KEY) && !is_letter(registered_options[cmdf_options_len].key)) // if char key, then it must check to see if the key is a assci letter
-            error_handler_parse_options_internal(flags, "An option with a specified char key must be a ascii alphabetical character.\n");
-
-
-
-        if(!(registered_options[cmdf_options_len].parameters & OPTION_OPTIONAL) && !(registered_options[cmdf_options_len].parameters & OPTION_ALIAS))    // if not optional, !(OPTION_OPTIONAL)
-        {
-            flag_last_non_alias_was_optional_option = 0;
-            x++;
-            strcat_char((char*)(&options_not_optional[x].alias),registered_options[cmdf_options_len].key);
-        }
-        else if((registered_options[cmdf_options_len].parameters & OPTION_ALIAS) && flag_last_non_alias_was_optional_option == 0)   // if last option was non optional and this is a alias
-        {
-            strcat_char((char*)(&options_not_optional[x].alias),registered_options[cmdf_options_len].key);
-        }
-        else // if a new optional option appears, then stop adding aliases
-        {
-            flag_last_non_alias_was_optional_option = 1;
-        }
-        
-
-        if(registered_options[cmdf_options_len].parameters & OPTION_ALIAS) // check for aliases, (OPTION_ALIAS)
-        {
-            if(last_option.long_name == NULL) // if the first registered option is an alias, then its obvisually ilegal
-                error_handler_parse_options_internal(flags, "The first option must be a non alias option, an alias must be declared below a non alias option.\n");
-
-            registered_options[cmdf_options_len].parameters = last_option.parameters;
-            registered_options[cmdf_options_len].argq = last_option.argq;
-            registered_options[cmdf_options_len].description = malloc(strlen(last_option.description)+1); // allocate for empty pointer then copy
-            strcpy(registered_options[cmdf_options_len].description,last_option.description);
-        }
-        else
-        {
-            last_option = registered_options[cmdf_options_len];
-        }
-        
-        cmdf_options_len++;
-    }
-
     // run for every argument passed on cmd
     while(i < argc) 
     {
@@ -358,7 +440,7 @@ int cdmf_parse_options(cmdf_options registered_options[], option_parse_function 
                 }
 
                 if(!flag_found_default) // if no default option found
-                    current_argument -= 1; // goes back the "--" so the next else-if case can process
+                    current_argument -= 1; // goes back the "-" so the next else-if case can process
 
             }
         }
@@ -485,7 +567,7 @@ int cdmf_parse_options(cmdf_options registered_options[], option_parse_function 
         (*parse_function)(current_key, current_argument, i, extern_user_variables_struct); 
     }
 
-    // if there are pending argumetns for a option
+    // if there are pending arguments for a option
     if(current_key_arg_counter > 0)
         error_handler_parse_options_internal(flags, "Too few arguments for option -%c .\n", current_key);
 
