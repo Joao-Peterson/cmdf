@@ -154,6 +154,8 @@ extern "C" {
 #define _VERSION_KEY 124    // default version option key
 #define _HELP_KEY 'h'       // default help option key, in case of the 'h' key be desired i suggest using 125 as a key instead
 
+#define MAX_CMD_ARGUMENTS 1000 // maximum number of arguments to be parsed
+
 /* -------------------------------------------- Enumerators ---------------------------------------------------- */
 
 /**
@@ -166,21 +168,23 @@ typedef enum
     OPTION_ALIAS            = 0x01,   /**< Specifies that this option is an alias of the above option */
     OPTION_OPTIONAL         = 0x02,   /**< This option is not trivial for the program */
     OPTION_NO_CHAR_KEY      = 0x04,   /**< This option can't be called by a alphabetical key, just the long version */
-    OPTION_HIDDEN           = 0x08    /**< This option doesn't appear on help menu */
+    OPTION_NO_LONG_KEY      = 0x08,   /**< This option can't be called by the long version, just the single char key */
+    OPTION_HIDDEN           = 0x10    /**< This option doesn't appear on help menu */
 }cdmf_OPTIONS_Typedef;
 
 
 /**
  * @brief Flags for when calling cmdf_parse_options.
  * 
- * To apply multiple flags, just use the or bitwise operator pipe "|".
+ * To apply multiple flags, just use the or bitwise operator "OR" ("|").
  */
 typedef enum
 {
-    PARSER_FLAG_NOT_EXIT_ON_ERROR       = 0x01,     /**< When an exception occurs don't exit program */
-    PARSER_FLAG_PRINT_ERRORS_STDOUT     = 0x02,     /**< Print error messages to stdout */
-    PARSER_FLAG_PRINT_ERRORS_STDERR     = 0x04,     /**< Print error messages to stderr */
-    PARSER_FLAG_USE_PREDEFINED_OPTIONS  = 0x08      /**< Create automatic --help (-h), --info, --version */
+    PARSER_FLAG_NOT_EXIT_ON_ERROR                   = 0x01,     /**< When an exception occurs don't exit program */
+    PARSER_FLAG_PRINT_ERRORS_STDOUT                 = 0x02,     /**< Print error messages to stdout */
+    PARSER_FLAG_PRINT_ERRORS_STDERR                 = 0x04,     /**< Print error messages to stderr */
+    PARSER_FLAG_DONT_IGNORE_NON_REGISTERED_OPTIONS  = 0x08,     /**< Extra options given by the user do not are discarted, a error will be trown */
+    PARSER_FLAG_USE_PREDEFINED_OPTIONS              = 0x10      /**< Create automatic --help (-h), --info, --version */
 }cdmf_PARSER_FLAGS_Typedef;
 
 /* -------------------------------------------- Structures and typedefs----------------------------------------- */

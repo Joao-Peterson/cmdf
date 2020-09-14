@@ -84,12 +84,13 @@ int is_letter(int character)
  */
 void strcat_char(char *destination_string ,int character)
 {
-    char *buffer = malloc(sizeof(*buffer)*2);
+    char *buffer = malloc(sizeof(*buffer));
 
     buffer[0] = (char)character;
-    buffer[1] = '\0';
 
     strcat(destination_string, buffer);
+
+    free(buffer);
 }
 
 
@@ -187,22 +188,84 @@ void default_options_parser(char key, cmdf_options user_options[])
 
 
 /**
- * @brief Check for key in struct option array.
+ * @brief Check if key is registered.
  * @param key: Char key to be verified.
  * @param options_array: Options array to check against.
  */
-int is_option_registered(char key, cmdf_options options_array[])
+int is_option_registered(char key, char *options_registered_array)
+{    
+    if(strchr(options_registered_array, key)!=NULL)
+        return 1;
+    else
+        return 0; // no key found return 0
+}
+
+
+/**
+ * @brief Check for program required options.
+ * @param user_keys_array: Array of user command line keys.
+ * @param options_required_matrix: Options aliases matrix to check against.
+ * @param flags: Parse flags used for error handling.
+ */
+int check_required_options(char* user_keys_array, char **options_required_matrix, cdmf_PARSER_FLAGS_Typedef flags)
 {
-    int i;
-    while(options_array[i].long_name != NULL) // the last element has null long name
+    int i = 0;
+    while(options_required_matrix[i][0] != '\0') // until a aliases string is empty
     {
-        if(options_array[i].key == key) // on key found, return true
-            return 1;
+        if(strpbrk(user_keys_array,options_required_matrix[i]) == NULL)
+        {
+            error_handler_parse_options_internal(flags, "The option -%c needs to be specified.\n", options_required_matrix[i][0]);
+            return 0;
+        }
 
         i++;
     }
 
-    return 0; // no key found return 0
+    return 1;
+}
+
+
+/**
+ * @brief Runs trought an array of options looking for the correponding option for a given long name.
+ * @param long_name: The full name of the options.
+ * @param options_array: Options array to check against.
+ * @return Returns a pointer to the option struct.
+ */
+cmdf_options *get_option_long_name(char *long_name, cmdf_options *options_array)
+{
+    int i = 0;
+
+    while(options_array[i].long_name != NULL)
+    {
+        if(!strcmp(long_name, options_array[i].long_name))
+            return &(options_array[i]);
+
+        i++;
+    }
+
+    return NULL;
+}
+
+
+/**
+ * @brief Runs trought an array of options looking for the correponding option for a given char key.
+ * @param long_name: The full name of the options.
+ * @param options_array: Options array to check against.
+ * @return Returns a pointer to the option struct.
+ */
+cmdf_options *get_option_long_name(char key, cmdf_options *options_array)
+{
+    int i = 0;
+
+    while(options_array[i].long_name != NULL)
+    {
+        if(options_array[i].key == key)
+            return &(options_array[i]);
+
+        i++;
+    }
+
+    return NULL;
 }
 
 
@@ -210,28 +273,30 @@ int is_option_registered(char key, cmdf_options options_array[])
  * @brief Tweak options array, substituting aliases and duplicates, etc.
  * @param options_array: Options array to check against.
  * @param flags: Parser flags to be used in error handling inside function.
+ * @return Returns pointer to 
  */
-cmdf_options *options_array_tweak(cmdf_options options_array[], cdmf_PARSER_FLAGS_Typedef flags)
+void parse_registered_options(cmdf_options **options_array_ptr, cdmf_PARSER_FLAGS_Typedef flags, char **options_required_ptr, char *options_registered_ptr, char *options_default_ptr)
 {
+    int i;
+    int j;
+
+    cmdf_options *options_array = *options_array_ptr;
+
+    options_required_ptr = calloc(sizeof(**options_required_ptr)*(0xFF*0xFF+0xFF));
+    for(i = 0; i < 0xFF; i++)
+        options_required_ptr[i] = (char*)options_required_ptr + (0xFF*(i+1))+1; // assign pointers
+
+    options_registered_ptr = calloc(sizeof(*options_registered_ptr)*0xFF);
+    options_default_ptr = calloc(sizeof(*options_registered_ptr)*0xFF);
+
     // to check for not optional options    
-    typedef struct{ char* alias; }options_matrix;
-    options_matrix *options_not_optional = malloc(sizeof(*options_not_optional)*0xFF+1); // 0xFF, biggest number in char, hence the vector should be able to hold that many
-    memset(options_not_optional, 0, sizeof(*options_not_optional)*0xFF); // just in case
-    char *options_passed = malloc(sizeof(*options_passed)*0xFF);
-    options_passed[0]='\0';
-    int flag_last_non_alias_was_optional_option = 0;
+    int flag_option_was_non_alias_and_required = 0;
 
     // to check for duplicate keys
-    char *all_keys = malloc(sizeof(*all_keys)*0xFF);
-    all_keys[0]='\0';
-    strcat_char(all_keys, _INFO_KEY);
-    strcat_char(all_keys, _VERSION_KEY);
-    strcat_char(all_keys, _HELP_KEY);
+    char *all_keys = calloc(sizeof(*all_keys)*0xFF);
 
     // to check for aliases
     cmdf_options last_option = {0};
-
-    int i;
 
 
 
@@ -258,15 +323,22 @@ cmdf_options *options_array_tweak(cmdf_options options_array[], cdmf_PARSER_FLAG
     default_options[default_options_len].long_name = NULL; // last elemnt shall be zero
 
     free(options_array); // free original user options
-    options_array = default_options; // make it point to new array
+
+    options_array = default_options;        // make it point to new array
+    *options_array_ptr = default_options;   // make the passed pointer point to new array
 
 
 
 
     /* Run trought options, incrementing the size and substituting aliases, (OPTION_ALIAS). */
 
+    options_len = 0;
+    i = -1;
+    j = 0;
+
     while(options_array[options_len].long_name != NULL)
     {
+        // Duplicates
         if(strchr(all_keys, options_array[options_len].key) == NULL) // if the key is not a DUPLICATE
             strcat_char(all_keys, options_array[options_len].key); // cat key
         else
@@ -274,31 +346,43 @@ cmdf_options *options_array_tweak(cmdf_options options_array[], cdmf_PARSER_FLAG
 
 
 
+        // Key ascii check
         if( (options_array[options_len].parameters & OPTION_NO_CHAR_KEY) && is_letter(options_array[options_len].key)) // if no char key, then it must check to see if the key is a non assci letter
             error_handler_parse_options_internal(flags, "An option with (OPTION_NO_CHAR_KEY) specified must be a non ascii alphabetical character.\n");
 
-
-        if( !(options_array[options_len].parameters & OPTION_NO_CHAR_KEY) && !is_letter(options_array[options_len].key)) // if char key, then it must check to see if the key is a assci letter
+        if( !(options_array[options_len].parameters & OPTION_NO_CHAR_KEY) && !is_letter(options_array[options_len].key)) // if char key, then it must check to see if the key is a asci letter
             error_handler_parse_options_internal(flags, "An option with a specified char key must be a ascii alphabetical character.\n");
 
+        
+
+        // Check for 0 key, reserved by the program
+        if(options_array[options_len].key == 0)
+            error_handler_parse_options_internal(flags, "No defined option should use the '0' key, it is reserved. The option --%s has key '0'\n",options_array[options_len].long_name);
 
 
-        if(!(options_array[options_len].parameters & OPTION_OPTIONAL) && !(options_array[options_len].parameters & OPTION_ALIAS))    // if not optional, !(OPTION_OPTIONAL)
+
+        // Optional options
+        if(!(options_array[options_len].parameters & OPTION_OPTIONAL) && !(options_array[options_len].parameters & OPTION_ALIAS))    // if not optional and non alias, !(OPTION_OPTIONAL)
         {
-            flag_last_non_alias_was_optional_option = 0;
+            flag_option_was_non_alias_and_required = 1;
+            j = 0;            
             i++;
-            strcat_char((char*)(&options_not_optional[i].alias),options_array[options_len].key);
+            strcat_char(options_required_ptr[i][j],options_array[options_len].key);
+            j++;
         }
-        else if((options_array[options_len].parameters & OPTION_ALIAS) && flag_last_non_alias_was_optional_option == 0)   // if last option was non optional and this is a alias
+        else if((options_array[options_len].parameters & OPTION_ALIAS) && flag_option_was_non_alias_and_required == 1)   // if this is a alias and last option was non optional
         {
-            strcat_char((char*)(&options_not_optional[i].alias),options_array[options_len].key);
+            strcat_char(options_required_ptr[i],options_array[options_len].key);
+            j++;
         }
         else // if a new optional option appears, then stop adding aliases
         {
-            flag_last_non_alias_was_optional_option = 1;
+            flag_option_was_non_alias_and_required = 0;
         }
         
 
+
+        // Aliases
         if(options_array[options_len].parameters & OPTION_ALIAS) // check for aliases, (OPTION_ALIAS)
         {
             if(last_option.long_name == NULL) // if the first registered option is an alias, then its obvisually ilegal
@@ -306,21 +390,31 @@ cmdf_options *options_array_tweak(cmdf_options options_array[], cdmf_PARSER_FLAG
 
             options_array[options_len].parameters = last_option.parameters;
             options_array[options_len].argq = last_option.argq;
-            options_array[options_len].description = malloc(strlen(last_option.description)+1); // allocate for empty pointer then copy
-            strcpy(options_array[options_len].description,last_option.description);
+            options_array[options_len].description = &("Alias for option above ↑");
         }
         else
         {
             last_option = options_array[options_len];
         }
-
-        /// REVER LOOP ACIMA E PARAMETROS QUE O LOOP RETORNA PARA A FUNÇÃO PODER RETORNA-LOS DEPOIS POR REFERÊNCIA
         
+
+        // Save default and registered options in strings
+        if(options_len < default_options_len)
+            strcat_char(options_default_ptr,options_array[options_len].key);
+        else
+            strcat_char(options_registered_ptr,options_array[options_len].key);
+
+
+
         options_len++;
     }
+
 }
 
+
+
 /* -------------------------------------------- Functions Implementations ---------------------------------------------- */
+
 
 /**
  * @brief Set default value of cmdf_default_info_usage
@@ -349,6 +443,59 @@ void set_cmdf_default_info_contact_info(const char *info_string)
 }
 
 
+void option_parser(char **argv, int *count, cmdf_options *current_option, option_parse_function user_parse_function, void *extern_user_variables_struct, cdmf_PARSER_FLAGS_Typedef flags)
+{
+    int arguments_to_take = current_option->argq;
+    char *current_argument = NULL;
+    int arg_counter = 0;
+
+    if(arguments_to_take == 0)
+    {
+        user_parse_function(current_option->key, NULL, arg_counter, extern_user_variables_struct);
+        return;
+    }
+    else if(arguments_to_take == -1)
+    {
+        (*count)++;
+        current_argument = argv[*count];
+
+        if(current_argument[0] == '-') // and option was given after the current one
+        {
+            error_handler_parse_options_internal(flags, "The option -%c needs at least one valid argument.", current_option->key);
+            return;
+        }
+
+        while(current_argument[0] != '-') // until another option comes
+        {
+            user_parse_function(current_option->key, current_argument, arg_counter, extern_user_variables_struct);
+
+            arg_counter++; // each new argument to the option has a index given by arg_counter
+            (*count)++; // read next on argv
+            current_argument = argv[*count];
+        }
+
+        (*count)--; // goes back by one, because we expect a new option to end the loop
+
+        return;
+    }
+    else if(arguments_to_take > 0)
+    {
+        while(arguments_to_take > 0) // by the times of expected arguments
+        {
+            //TERMINAR AQUI
+
+            arguments_to_take--;
+        }
+    }
+    else
+    {
+        error_handler_parse_options_internal(flags, "The option --%s was registered with invalid number of argument: (%i). It should be, -1, 0 or bigger than 0.", arguments_to_take);
+        return;
+    }
+
+}
+
+
 /**
  * @brief Main library function, used to parse options in main program.
  * The "cdmf_parse_options" function will call the user defined function to handle actions as desired.
@@ -362,37 +509,64 @@ void set_cmdf_default_info_contact_info(const char *info_string)
  */
 int cdmf_parse_options(cmdf_options registered_options[], option_parse_function parse_function, int argc, char **argv, cdmf_PARSER_FLAGS_Typedef flags, void *extern_user_variables_struct)
 {
-    char current_key = 0;
-    char* current_argument;
+    if(argc >= MAX_CMD_ARGUMENTS)
+        error_handler_parse_options_internal(flags, "The maximum number of (%d) arguments was passed.\n",MAX_CMD_ARGUMENTS);
+
     int i = 1, j = 0, k= 0;
     int x = -1, y = 0;
+
+    char current_key = 0;
+    char* current_argument;
     int current_key_arg_counter = -1; // in case of first coming arguments with no set key, they will be processed until a key arrives
-    int flag_found_default = 0;
+    
+    char **options_required_matrix = NULL;
+    char *options_default_array = NULL;
+    char *options_registered_array = NULL;
 
-    // to check for not optional options    
-    typedef struct{ char* alias; }options_matrix;
-    options_matrix *options_not_optional = malloc(sizeof(*options_not_optional)*0xFF+1); // 0xFF, biggest number in char, hence the vector should be able to hold that many
-    memset(options_not_optional, 0, sizeof(*options_not_optional)*0xFF); // just in case
-    char *options_passed = malloc(sizeof(*options_passed)*0xFF);
-    options_passed[0]='\0';
-    int flag_last_non_alias_was_optional_option = 0;
+    parse_registered_options(registered_options, flags, options_required_matrix, options_registered_array, options_default_array);
 
-    // to check for duplicate keys
-    char *all_keys = malloc(sizeof(*all_keys)*0xFF);
-    all_keys[0]='\0';
-    strcat_char(all_keys, _INFO_KEY);
-    strcat_char(all_keys, _VERSION_KEY);
-    strcat_char(all_keys, _HELP_KEY);
-
-    // to check for aliases
-    int cmdf_options_len = 0;
-    cmdf_options last_option = {0};
-
+    cmdf_options *current_option = NULL;
 
     // run for every argument passed on cmd
     while(i < argc) 
     {
         current_argument = argv[i];
+
+        if(current_argument[0]=='-' && current_argument[1]=='-')            // ------------- long name option
+        {
+            current_argument += 2; // remove the "--" in the beginning
+            current_option = get_option_long_name(current_argument,registered_options);
+
+            if(current_option == NULL) // option is not registered
+            {
+                if (flags & PARSER_FLAG_DONT_IGNORE_NON_REGISTERED_OPTIONS)
+                    error_handler_parse_options_internal(flags, "The option --%s is invalid!", current_argument);
+                
+                i++;
+                continue; // ignore if the error handler above doesn't exit the program
+            }
+
+            if(current_option->parameters & OPTION_NO_LONG_KEY) // long name of the option is not to be used
+            {
+                i++;
+                continue;
+            }
+
+            option_parser(argv, &i, current_option, parse_function, extern_user_variables_struct, flags);
+        }
+        else if(current_argument[0]=='-' && strlen(current_argument)>=2)    // ------------- nested char key option
+        {
+
+        }
+        else if(current_argument[0]=='-')                                   // ------------- single char key option
+        {
+
+        }
+        else                                                                // ------------- floating argument
+        {
+
+        }
+
 
 
         // verify for default expressions -------------------------
@@ -446,16 +620,8 @@ int cdmf_parse_options(cmdf_options registered_options[], option_parse_function 
         }
 
 
-        //if default option is found, continue the loop -----------------------------------------------------------
-        if(flag_found_default)
-        {
-            flag_found_default = 0;
-            continue;
-        }
-
-
         //verify for registered arguments --------------------------------------------------------------------------
-        if(current_argument[0]=='-' && current_argument[1]=='-' && current_key_arg_counter<=0 ) // -----------------------------------long option
+        if(current_argument[0]=='-' && current_argument[1]=='-' && current_key_arg_counter<=0 )         // ---------------------------long option
         {
             current_argument += 2; // jump over "--"
 
@@ -480,7 +646,7 @@ int cdmf_parse_options(cmdf_options registered_options[], option_parse_function 
             continue;
 
         }
-        else if(current_argument[0]=='-' && current_key_arg_counter<=0 && strlen(current_argument)<=2) // ---------------------------single key option
+        else if(current_argument[0]=='-' && current_key_arg_counter<=0 && strlen(current_argument)<=2)  // ---------------------------single key option
         {
             current_argument += 1; // jump over "-"
 
@@ -505,7 +671,7 @@ int cdmf_parse_options(cmdf_options registered_options[], option_parse_function 
             continue;
 
         }
-        else if(current_argument[0]=='-' && current_key_arg_counter<=0 && strlen(current_argument)>2) // ---------------------------nested key options
+        else if(current_argument[0]=='-' && current_key_arg_counter<=0 && strlen(current_argument)>2)   // ---------------------------nested key options
         {
             current_argument += 1; // jump over "-"
 
@@ -545,7 +711,7 @@ int cdmf_parse_options(cmdf_options registered_options[], option_parse_function 
             continue;
 
         }
-        else if(current_argument[0]=='-' && current_key_arg_counter > 0) // ---------------------------found a new option "-" or "--" while waiting for other arguments
+        else if(current_argument[0]=='-' && current_key_arg_counter > 0)                                // ---------------------------found a new option "-" or "--" while waiting for other arguments
         {
             error_handler_parse_options_internal(flags, "Too few arguments for option -%c .\n", current_key);
         }
