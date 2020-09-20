@@ -16,12 +16,9 @@
 extern "C" { 
 #endif 
 
-/* Includes and dependencies */
 
 #include "cmd_friend.h"
 
-
-/* -------------------------------------------- Private Definitions ---------------------------------------------------- */
 
 /**
  * @brief Default options array lenght.
@@ -37,16 +34,19 @@ extern "C" {
 char *cmdf_default_info_usage = NULL;
 
 
+
 /**
  * String defining the version info when using default option --version
  */
 char *cmdf_default_info_version = NULL;
 
 
+
 /**
  * String defining the contact info when using default option --info
  */
 char *cmdf_default_info_contact_info = NULL;
+
 
 
 /**
@@ -64,6 +64,7 @@ cmdf_options default_options[] =
 
 /* -------------------------------------------- Private Functions ------------------------------------------------------ */
 
+
 /**
  * @brief Function to check if a character is a ascii letter.
  * @param character: Char character.
@@ -75,6 +76,7 @@ int is_letter(int character)
     else
         return 0;
 }
+
 
 
 /**
@@ -92,6 +94,7 @@ void strcat_char(char *destination_string ,int character)
 
     free(buffer);
 }
+
 
 
 /**
@@ -117,11 +120,10 @@ void error_handler_parse_options_internal(cdmf_PARSER_FLAGS_Typedef flags, const
 
     va_end(valist);
 
-    if(!(flags & PARSER_FLAG_NOT_EXIT_ON_ERROR))
-        exit(1);
-    else
-        return;
+    exit(1);
+
 }
+
 
 
 /**
@@ -187,6 +189,7 @@ void default_options_parser(char key, cmdf_options user_options[])
 }
 
 
+
 /**
  * @brief Check if key is registered.
  * @param key: Char key to be verified.
@@ -199,6 +202,7 @@ int is_option_registered(char key, char *options_registered_array)
     else
         return 0; // no key found return 0
 }
+
 
 
 /**
@@ -225,13 +229,14 @@ int check_required_options(char* user_keys_array, char **options_required_matrix
 }
 
 
+
 /**
  * @brief Runs trought an array of options looking for the correponding option for a given long name.
  * @param long_name: The full name of the options.
  * @param options_array: Options array to check against.
  * @return Returns a pointer to the option struct.
  */
-cmdf_options *get_option_long_name(char *long_name, cmdf_options *options_array)
+cmdf_options *get_option_by_long_name(char *long_name, cmdf_options *options_array)
 {
     int i = 0;
 
@@ -247,13 +252,14 @@ cmdf_options *get_option_long_name(char *long_name, cmdf_options *options_array)
 }
 
 
+
 /**
  * @brief Runs trought an array of options looking for the correponding option for a given char key.
- * @param long_name: The full name of the options.
+ * @param key: The char key of the option.
  * @param options_array: Options array to check against.
  * @return Returns a pointer to the option struct.
  */
-cmdf_options *get_option_long_name(char key, cmdf_options *options_array)
+cmdf_options *get_option_by_key(char key, cmdf_options *options_array)
 {
     int i = 0;
 
@@ -269,6 +275,7 @@ cmdf_options *get_option_long_name(char key, cmdf_options *options_array)
 }
 
 
+
 /**
  * @brief Tweak options array, substituting aliases and duplicates, etc.
  * @param options_array: Options array to check against.
@@ -282,18 +289,18 @@ void parse_registered_options(cmdf_options **options_array_ptr, cdmf_PARSER_FLAG
 
     cmdf_options *options_array = *options_array_ptr;
 
-    options_required_ptr = calloc(sizeof(**options_required_ptr)*(0xFF*0xFF+0xFF));
+    options_required_ptr = calloc(sizeof(**options_required_ptr)*(0xFF*0xFF+0xFF),1);
     for(i = 0; i < 0xFF; i++)
         options_required_ptr[i] = (char*)options_required_ptr + (0xFF*(i+1))+1; // assign pointers
 
-    options_registered_ptr = calloc(sizeof(*options_registered_ptr)*0xFF);
-    options_default_ptr = calloc(sizeof(*options_registered_ptr)*0xFF);
+    options_registered_ptr = calloc(sizeof(*options_registered_ptr)*0xFF,1);
+    options_default_ptr = calloc(sizeof(*options_registered_ptr)*0xFF,1);
 
     // to check for not optional options    
     int flag_option_was_non_alias_and_required = 0;
 
     // to check for duplicate keys
-    char *all_keys = calloc(sizeof(*all_keys)*0xFF);
+    char *all_keys = calloc(sizeof(*all_keys)*0xFF,1);
 
     // to check for aliases
     cmdf_options last_option = {0};
@@ -347,11 +354,14 @@ void parse_registered_options(cmdf_options **options_array_ptr, cdmf_PARSER_FLAG
 
 
         // Key ascii check
+        if(options_array[options_len].key == 0)
+            error_handler_parse_options_internal(flags,"The option -%c / --%s have the char key set to 0, the 0 key is reserved, please change to another int or char.\n",options_array[options_len].key,options_array[options_len].long_name);
+
         if( (options_array[options_len].parameters & OPTION_NO_CHAR_KEY) && is_letter(options_array[options_len].key)) // if no char key, then it must check to see if the key is a non assci letter
-            error_handler_parse_options_internal(flags, "An option with (OPTION_NO_CHAR_KEY) specified must be a non ascii alphabetical character.\n");
+            error_handler_parse_options_internal(flags, "An option with (OPTION_NO_CHAR_KEY) specified must be a non ascii alphabetical character. Option: -%c / --%s.\n",options_array[options_len].key,options_array[options_len].long_name);
 
         if( !(options_array[options_len].parameters & OPTION_NO_CHAR_KEY) && !is_letter(options_array[options_len].key)) // if char key, then it must check to see if the key is a asci letter
-            error_handler_parse_options_internal(flags, "An option with a specified char key must be a ascii alphabetical character.\n");
+            error_handler_parse_options_internal(flags, "An option with a specified char key must be a ascii alphabetical character. Option: -%c / --%s.\n",options_array[options_len].key,options_array[options_len].long_name);
 
         
 
@@ -413,6 +423,119 @@ void parse_registered_options(cmdf_options **options_array_ptr, cdmf_PARSER_FLAG
 
 
 
+/**
+ * @brief Receives an option an call user define option parser function upon the arguments that succed the option
+ * @param argv: Array of strings of arguments from command line. 
+ * @param count: Pointer to int counter of arguments from argv. 
+ * @param current_option: Struct with the current option information. 
+ * @param user_parser_function: User defined parser function to parser the options. 
+ * @param extern_user_variables_struct: Pointer to user defined struct. 
+ * @param flags: Flags used for the error handler function. 
+ */
+void option_parser(int argc, char **argv, int *count, cmdf_options *current_option, option_parse_function user_parse_function, void *extern_user_variables_struct, cmdf_options *registered_options, char *default_options, cdmf_PARSER_FLAGS_Typedef flags)
+{
+    int arguments_to_take = current_option->argq;
+    char *current_argument = NULL;
+    int arg_counter = 0;
+    int i = 0;
+
+    if(arguments_to_take == 0)
+    {
+        if(strpbrk(default_options,current_option->key) == NULL) // if the current option is not a default option
+            user_parse_function(current_option->key, NULL, arg_counter, extern_user_variables_struct);
+        else
+            default_options_parser(current_option->key, registered_options);
+
+
+        return;
+    }
+    else if(arguments_to_take == -1)
+    {
+
+        if((*count) < argc) // to prevent for acessing undesirable memory beyond the argv array
+            (*count)++;
+        
+        current_argument = argv[*count];
+
+        if(current_argument[0] == '-') // and option was given after the current one
+        {
+            error_handler_parse_options_internal(flags, "The option -%c / --%s needs at least one valid argument.\n", current_option->key, current_option->long_name);
+            return;
+        }
+
+        while(current_argument[0] != '-') // until another option comes
+        {
+            if(strpbrk(default_options,current_option->key) == NULL) // if the current option is not a default option
+                user_parse_function(current_option->key, current_argument, arg_counter, extern_user_variables_struct);
+            else
+                default_options_parser(current_option->key, registered_options);
+
+
+            arg_counter++; // each new argument to the option has a index given by arg_counter
+            
+            if((*count) < argc) // to prevent for acessing undesirable memory beyond the argv array
+                (*count)++; // read next on argv
+            else 
+                return; // exit function after all cmd arguments have been read 
+
+            current_argument = argv[*count];
+        }
+
+        (*count)--; // goes back by one, because we expect a new option to end the loop
+
+        return;
+
+    }
+    else if(arguments_to_take > 0)
+    {
+
+        if((*count) < argc) // to prevent for acessing undesirable memory beyond the argv array
+            (*count)++;
+        
+        current_argument = argv[*count];
+
+        while(current_argument[0] != '-') // until another option comes
+        {
+            if(strpbrk(default_options,current_option->key) == NULL) // if the current option is not a default option
+                user_parse_function(current_option->key, current_argument, arg_counter, extern_user_variables_struct);
+            else
+                default_options_parser(current_option->key, registered_options);
+
+
+            arg_counter++; // each new argument to the option has a index given by arg_counter
+            
+            if((*count) < argc) // to prevent for acessing undesirable memory beyond the argv array
+                (*count)++; // read next on argv
+            else 
+                return; // exit function after all cmd arguments have been read 
+
+            current_argument = argv[*count];
+        }
+
+        if(arg_counter > arguments_to_take)
+        {
+            error_handler_parse_options_internal(flags, "The option -%c / --%s has too many arguments, it only receives %i many.\n",current_option->key,current_option->long_name,current_option->argq);
+        }
+        else if(arg_counter < arguments_to_take)
+        {
+            error_handler_parse_options_internal(flags, "The option -%c / --%s has too few arguments, it expects at least %i.\n",current_option->key,current_option->long_name,current_option->argq);
+        }
+
+        (*count)--; // goes back by one, because we expect a new option to end the loop
+
+        return;
+
+    }
+    else
+    {
+        error_handler_parse_options_internal(flags, "The option --%s was registered with invalid number of argument: (%i). It should be, -1, 0 or bigger than 0.\n", arguments_to_take);
+        return;
+    }
+
+}
+
+
+
 /* -------------------------------------------- Functions Implementations ---------------------------------------------- */
 
 
@@ -425,6 +548,7 @@ void set_cmdf_default_info_usage(const char *info_string)
 }
 
 
+
 /**
  * @brief Set default value of cmdf_default_info_version
  */
@@ -432,6 +556,7 @@ void set_cmdf_default_info_version(const char *info_string)
 {
     cmdf_default_info_version = info_string;
 }
+
 
 
 /**
@@ -442,58 +567,6 @@ void set_cmdf_default_info_contact_info(const char *info_string)
     cmdf_default_info_contact_info = info_string;
 }
 
-
-void option_parser(char **argv, int *count, cmdf_options *current_option, option_parse_function user_parse_function, void *extern_user_variables_struct, cdmf_PARSER_FLAGS_Typedef flags)
-{
-    int arguments_to_take = current_option->argq;
-    char *current_argument = NULL;
-    int arg_counter = 0;
-
-    if(arguments_to_take == 0)
-    {
-        user_parse_function(current_option->key, NULL, arg_counter, extern_user_variables_struct);
-        return;
-    }
-    else if(arguments_to_take == -1)
-    {
-        (*count)++;
-        current_argument = argv[*count];
-
-        if(current_argument[0] == '-') // and option was given after the current one
-        {
-            error_handler_parse_options_internal(flags, "The option -%c needs at least one valid argument.", current_option->key);
-            return;
-        }
-
-        while(current_argument[0] != '-') // until another option comes
-        {
-            user_parse_function(current_option->key, current_argument, arg_counter, extern_user_variables_struct);
-
-            arg_counter++; // each new argument to the option has a index given by arg_counter
-            (*count)++; // read next on argv
-            current_argument = argv[*count];
-        }
-
-        (*count)--; // goes back by one, because we expect a new option to end the loop
-
-        return;
-    }
-    else if(arguments_to_take > 0)
-    {
-        while(arguments_to_take > 0) // by the times of expected arguments
-        {
-            //TERMINAR AQUI
-
-            arguments_to_take--;
-        }
-    }
-    else
-    {
-        error_handler_parse_options_internal(flags, "The option --%s was registered with invalid number of argument: (%i). It should be, -1, 0 or bigger than 0.", arguments_to_take);
-        return;
-    }
-
-}
 
 
 /**
@@ -507,242 +580,121 @@ void option_parser(char **argv, int *count, cmdf_options *current_option, option
  * @param flags: Flags used to customize the function "cdmf_parse_options" behavior, flags shall be located on "cdmf_PARSER_FLAGS_Typedef" enumerator.
  * @param extern_user_variables_struct: Opaque pointer to user define struct in main program, used to be accessed in the also user define parser function.
  */
-int cdmf_parse_options(cmdf_options registered_options[], option_parse_function parse_function, int argc, char **argv, cdmf_PARSER_FLAGS_Typedef flags, void *extern_user_variables_struct)
+int cdmf_parse_options(cmdf_options *registered_options, option_parse_function user_parse_function, int argc, char **argv, cdmf_PARSER_FLAGS_Typedef flags, void *extern_user_variables_struct)
 {
     if(argc >= MAX_CMD_ARGUMENTS)
         error_handler_parse_options_internal(flags, "The maximum number of (%d) arguments was passed.\n",MAX_CMD_ARGUMENTS);
 
-    int i = 1, j = 0, k= 0;
+    int i = 0, j = 0, k= 0;
     int x = -1, y = 0;
 
     char current_key = 0;
     char* current_argument;
     int current_key_arg_counter = -1; // in case of first coming arguments with no set key, they will be processed until a key arrives
     
-    char **options_required_matrix = NULL;
-    char *options_default_array = NULL;
-    char *options_registered_array = NULL;
+    char **options_required_matrix = NULL;          // required options with respective aliases
+    char *options_default_array = NULL;             // default options given by the library
+    char *options_registered_array = NULL;          // all the non default options
+    char *options_passed_array = calloc(0xFF, 1);   // the options given on the cmd
 
     parse_registered_options(registered_options, flags, options_required_matrix, options_registered_array, options_default_array);
 
     cmdf_options *current_option = NULL;
 
     // run for every argument passed on cmd
+    i = 1; // to the first cmd argument after the programs name
     while(i < argc) 
     {
         current_argument = argv[i];
 
         if(current_argument[0]=='-' && current_argument[1]=='-')            // ------------- long name option
         {
+
             current_argument += 2; // remove the "--" in the beginning
-            current_option = get_option_long_name(current_argument,registered_options);
+            current_option = get_option_by_long_name(current_argument,registered_options);
+
+            strcat_char(options_passed_array, current_option->key); // remember option
 
             if(current_option == NULL) // option is not registered
             {
                 if (flags & PARSER_FLAG_DONT_IGNORE_NON_REGISTERED_OPTIONS)
-                    error_handler_parse_options_internal(flags, "The option --%s is invalid!", current_argument);
+                    error_handler_parse_options_internal(flags, "The option --%s is invalid!\n", current_argument);
                 
-                i++;
-                continue; // ignore if the error handler above doesn't exit the program
+
+                if(i < argc) // to prevent for acessing undesirable memory beyond the argv array
+                {
+                    i++;
+                    continue; // ignore if the error handler above doesn't exit the program
+                }
+                else
+                    break; // exit from while
             }
 
             if(current_option->parameters & OPTION_NO_LONG_KEY) // long name of the option is not to be used
             {
-                i++;
-                continue;
+                if(i < argc) // to prevent for acessing undesirable memory beyond the argv array
+                {
+                    i++;
+                    continue;
+                }
+                else
+                    break; // exit from while
+
             }
 
-            option_parser(argv, &i, current_option, parse_function, extern_user_variables_struct, flags);
-        }
-        else if(current_argument[0]=='-' && strlen(current_argument)>=2)    // ------------- nested char key option
-        {
+            option_parser(argc, argv, &i, current_option, user_parse_function, extern_user_variables_struct, registered_options, options_default_array, flags);
 
         }
-        else if(current_argument[0]=='-')                                   // ------------- single char key option
+        else if(current_argument[0]=='-')                                   // ------------- char key option
         {
+            
+            current_argument += 1; // jump over the "-" 
+
+            j = 0;
+            while(current_argument[j] != '\0') // for every letter in option
+            {
+                current_option = get_option_by_key(current_argument[j], registered_options);
+
+                strcat_char(options_passed_array, current_option->key); // remember option
+
+                if( (strlen(current_argument) > 1) && (current_option->argq != 0) ) // check for when nested options come, trown an error if one of then requires an argument. only no argument options can be nested.
+                    error_handler_parse_options_internal(flags, "Only nested options can be nested in a single \"-\". Nested options passed: -%s , Option that requires arguments: -%c.\n",current_argument,current_option->key);
+
+                if(current_option == NULL) // option is not registered
+                {
+                    if (flags & PARSER_FLAG_DONT_IGNORE_NON_REGISTERED_OPTIONS)
+                        error_handler_parse_options_internal(flags, "The option -%c is invalid!\n", current_key);
+                    
+                    
+                    if(i < argc) // to prevent for acessing undesirable memory beyond the argv array
+                    {
+                        i++;
+                        continue; // ignore if the error handler above doesn't exit the program
+                    }
+                    else
+                        break; // exit from while
+                }
+
+                option_parser(argc, argv, &i, current_option, user_parse_function, extern_user_variables_struct, registered_options, options_default_array, flags);
+
+                j++;
+            }
 
         }
         else                                                                // ------------- floating argument
         {
-
+            user_parse_function(0, current_argument, i, extern_user_variables_struct); // pass alone argument with the 0 key
         }
 
-
-
-        // verify for default expressions -------------------------
-
-        if(flags & PARSER_FLAG_USE_PREDEFINED_OPTIONS)
-        {
-            if(current_argument[0]=='-' && current_argument[1]=='-' && current_key_arg_counter<=0 ) // ---------------------------default long options
-            {
-                current_argument += 2; // jump over "--"
-
-                j = 0;
-                while(j < DEFAULT_OPTIONS_LENGHT) // verify if its registered
-                {
-                    if(!strcmp(default_options[j].long_name,current_argument))
-                    {
-                        flag_found_default = 1;
-                        default_options_parser(default_options[j].key, registered_options);
-                        i++; // jumps to next argv
-                        break; // found!
-                    }
-
-                    j++;
-                }
-
-                if(!flag_found_default) // if no default option found
-                    current_argument -= 2; // goes back the "--" so the next else-if case can process
-
-            }
-            else if(current_argument[0]=='-' && current_key_arg_counter<=0 && strlen(current_argument)<=2) // ---------------------------default single key options
-            {
-                current_argument += 1; // jump over "-"
-
-                j = 0;
-                while(j < DEFAULT_OPTIONS_LENGHT) // verify if its registered
-                {
-                    if(current_argument[0]==default_options[j].key) // compare keys and verify if registered
-                    {
-                        flag_found_default = 1;
-                        default_options_parser(default_options[j].key, registered_options);
-                        i++; // jumps to next argv
-                        break; // found!
-                    }
-
-                    j++;
-                }
-
-                if(!flag_found_default) // if no default option found
-                    current_argument -= 1; // goes back the "-" so the next else-if case can process
-
-            }
-        }
-
-
-        //verify for registered arguments --------------------------------------------------------------------------
-        if(current_argument[0]=='-' && current_argument[1]=='-' && current_key_arg_counter<=0 )         // ---------------------------long option
-        {
-            current_argument += 2; // jump over "--"
-
-            j = 0;
-            while(j < cmdf_options_len) // verify if its registered
-            {
-                if(!strcmp(registered_options[j].long_name,current_argument))
-                {
-                    current_key = registered_options[j].key; // pick key
-                    current_key_arg_counter = registered_options[j].argq; // arguments to receive
-                    break; // found!
-                }
-
-                j++;
-            }
-
-            if(j == cmdf_options_len-1) // if the while was exited by expression and not by the continue, indicating that the option was not found
-                error_handler_parse_options_internal(flags, "Option --%s is not valid.\n", current_argument);
-
-            strcat_char(options_passed, current_key); // register the key used
-            i++;
-            continue;
-
-        }
-        else if(current_argument[0]=='-' && current_key_arg_counter<=0 && strlen(current_argument)<=2)  // ---------------------------single key option
-        {
-            current_argument += 1; // jump over "-"
-
-            j = 0;
-            while(j < cmdf_options_len) // verify if its registered
-            {
-                if(current_argument[0]==registered_options[j].key) // compare keys and verify if registered
-                {
-                    current_key = registered_options[j].key; // pick key
-                    current_key_arg_counter = registered_options[j].argq; // arguments to receive
-                    break; // found!
-                }
-
-                j++;
-            }
-
-            if(j == cmdf_options_len-1) // if the while was exited by expression and not by the continue, indicating that the option was not found
-                error_handler_parse_options_internal(flags, "Option --%s is not valid.\n", current_argument);
-
-            strcat_char(options_passed, current_key); // register the key used
-            i++;
-            continue;
-
-        }
-        else if(current_argument[0]=='-' && current_key_arg_counter<=0 && strlen(current_argument)>2)   // ---------------------------nested key options
-        {
-            current_argument += 1; // jump over "-"
-
-            k = 0;
-            while(k < strlen(current_argument)) // the last element should be handled exiting this loop and leaving to the function outside else-if case as normal
-            {
-                j = 0;
-                while(j < cmdf_options_len) // verify if its registered
-                {
-                    if(current_argument[k]==registered_options[j].key) // compare keys and verify if registered
-                    {
-                        current_key = registered_options[j].key; // pick key
-                        current_key_arg_counter = registered_options[j].argq; // arguments to receive
-                        if(current_key_arg_counter != 0) // only no arguments options can be nested
-                            error_handler_parse_options_internal(flags, "Only options that do not receive arguments can be nested. Option called: -%c .\n",current_key);
-                        break; 
-                    }
-
-                    j++;
-                }
-
-                if(j == cmdf_options_len-1) // if the while was exited by expression and not by the continue, indicating that the option was not found
-                    error_handler_parse_options_internal(flags, "Option -%c is not valid.\n", current_argument[k]);
-
-                if(k == strlen(current_argument)-1) // shall break in the last argument, so it can be handled as normal, as if this block never saw the first options
-                    break;
-
-                strcat_char(options_passed, current_key); // register the key used
-
-                (*parse_function)(current_key, current_argument, i, extern_user_variables_struct); // call parser function on each nested element
-
-                k++;
-            }
-
-            strcat_char(options_passed, current_key); // register the key used
-            i++;
-            continue;
-
-        }
-        else if(current_argument[0]=='-' && current_key_arg_counter > 0)                                // ---------------------------found a new option "-" or "--" while waiting for other arguments
-        {
-            error_handler_parse_options_internal(flags, "Too few arguments for option -%c .\n", current_key);
-        }
-        else // ------------------------------------------------------floating argument
-        {
-            if(current_key_arg_counter > 0) // if argument found then count as a possible argument for the current_option
-            {
-                current_key_arg_counter--;
-            }
-            else if(current_key_arg_counter == 0)
-            {
-                error_handler_parse_options_internal(flags, "Too many arguments for option -%c . Extra argument: %s .\n", current_key, current_argument);
-            }
-
-            i++;
-        }
-
-        // call parse funtion if the argument has already been received
-        (*parse_function)(current_key, current_argument, i, extern_user_variables_struct); 
+        i++;
     }
 
-    // if there are pending arguments for a option
-    if(current_key_arg_counter > 0)
-        error_handler_parse_options_internal(flags, "Too few arguments for option -%c .\n", current_key);
-
-    // check for not optional options
+    // check for required options
     i = 0;
-    while(((char*)(&options_not_optional[i].alias))[0] != '\0') // until a alias string is empty
+    while(options_required_matrix[i] != NULL)
     {
-        if(strpbrk(options_passed,(char*)(&options_not_optional[i].alias)) == NULL)
-            error_handler_parse_options_internal(flags, "The option -%c needs to be specified.\n", options_not_optional[i]);
+        if(strpbrk(options_passed_array,options_required_matrix[i]) == NULL)
+            error_handler_parse_options_internal(flags, "The option -%c / --%s needs to be specified.\n",options_required_matrix[i][0]);
 
         i++;
     }

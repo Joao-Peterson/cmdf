@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 {
     // set information for the default options
     set_cmdf_default_info_usage("Usage: [-w,-o,-f] for project or [-M,-m] for module [FILEPATH] [OPTIONS...]");
-    //set_cmdf_default_info_version("v1.0 - 10/08/2020");
+    set_cmdf_default_info_version("v1.0 - 10/08/2020");
     set_cmdf_default_info_contact_info("Repo: https://github.com/Joao-Peterson/CMD-Friend - Email: joco_zx@hotmail.com");
 
     struct arguments_info myvars;
