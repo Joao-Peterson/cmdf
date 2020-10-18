@@ -11,7 +11,7 @@
 
 # Main program
 MAIN_EXE = main
-VERSION = v1.0
+VERSION = v1.2
 
 # Compiler definitions :
 CC = gcc

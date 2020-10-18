@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['long_5fname_21',['long_name',['../structcmdf__options.html#a76863ec430ec7fff9a1e08b0b41dad62',1,'cmdf_options']]]
+  ['key_21',['key',['../structcmdf__option.html#acad36f7a1211e9e9da68e181667d9c3f',1,'cmdf_option']]]
 ];

@@ -53,7 +53,7 @@ const char *cmdf_default_info_contact_info = NULL;
  * @brief Default options array, every option shall always have zero arguments.
  * Modify if necessary.
  */
-const cmdf_options default_options[] = 
+const cmdf_option default_options[] = 
 {
     {"help",    __HELP_KEY,    OPTION_OPTIONAL | OPTION_NO_CHAR_KEY , 0, "Shows this help menu"},
     {"info",    __INFO_KEY,    OPTION_OPTIONAL | OPTION_NO_CHAR_KEY , 0, "Shows information about the program"},
@@ -132,7 +132,7 @@ void error_handler_parse_options_internal(PARSER_FLAGS_Typedef flags, const char
  * @param key: Char key of defined function.
  * @param user_options: User define options array, used for printing them in --help option.
  */
-void default_options_parser(char key, cmdf_options user_options[], PARSER_FLAGS_Typedef flags)
+void default_options_parser(char key, cmdf_option user_options[], PARSER_FLAGS_Typedef flags)
 {
     int user_options_len = 0;
     while(user_options[user_options_len].long_name != NULL)
@@ -231,7 +231,7 @@ int is_option_registered(char key, char *options_registered_array)
  * @param options_array: Options array to check against.
  * @return Returns a pointer to the option struct.
  */
-cmdf_options *get_option_by_long_name(char *long_name, cmdf_options *options_array)
+cmdf_option *get_option_by_long_name(char *long_name, cmdf_option *options_array)
 {
     int i = 0;
 
@@ -254,7 +254,7 @@ cmdf_options *get_option_by_long_name(char *long_name, cmdf_options *options_arr
  * @param options_array: Options array to check against.
  * @return Returns a pointer to the option struct.
  */
-cmdf_options *get_option_by_key(char key, cmdf_options *options_array)
+cmdf_option *get_option_by_key(char key, cmdf_option *options_array)
 {
     int i = 0;
 
@@ -279,7 +279,7 @@ cmdf_options *get_option_by_key(char key, cmdf_options *options_array)
  * @param options_registered_ptr: Pointer to string, to be allocated and receive all the registered options.
  * @param options_default_ptr: Pointer to string, to be allocated and receive all the default options.
  */
-void parse_registered_options(cmdf_options **options_array_ptr, PARSER_FLAGS_Typedef flags, char options_required_ptr[0xFF][0xFF], char options_registered_ptr[0xFF], char options_default_ptr[0xFF])
+void parse_registered_options(cmdf_option **options_array_ptr, PARSER_FLAGS_Typedef flags, char options_required_ptr[0xFF][0xFF], char options_registered_ptr[0xFF], char options_default_ptr[0xFF])
 {
     int i;
     int j;
@@ -291,7 +291,7 @@ void parse_registered_options(cmdf_options **options_array_ptr, PARSER_FLAGS_Typ
     char *all_keys = calloc(sizeof(*all_keys)*0xFF,1);
 
     // to check for aliases
-    cmdf_options last_option = {0};
+    cmdf_option last_option = {0};
 
 
     /* Create new array with default and user defined options to be parsed */
@@ -303,10 +303,10 @@ void parse_registered_options(cmdf_options **options_array_ptr, PARSER_FLAGS_Typ
 
     int total_options_length = options_len + DEFAULT_OPTIONS_LENGTH;
 
-    cmdf_options *options_array = calloc(sizeof(cmdf_options)*(total_options_length+1),1); // new array
+    cmdf_option *options_array = calloc(sizeof(cmdf_option)*(total_options_length+1),1); // new array
 
-    memcpy(options_array, default_options, sizeof(cmdf_options)*DEFAULT_OPTIONS_LENGTH); // copy default options
-    memcpy((options_array + DEFAULT_OPTIONS_LENGTH), (*options_array_ptr), sizeof(cmdf_options)*options_len); // copy user options
+    memcpy(options_array, default_options, sizeof(cmdf_option)*DEFAULT_OPTIONS_LENGTH); // copy default options
+    memcpy((options_array + DEFAULT_OPTIONS_LENGTH), (*options_array_ptr), sizeof(cmdf_option)*options_len); // copy user options
 
     options_array[total_options_length].long_name = NULL; // last element shall be empty
 
@@ -407,7 +407,7 @@ void parse_registered_options(cmdf_options **options_array_ptr, PARSER_FLAGS_Typ
  * @param extern_user_variables_struct: Pointer to user defined struct. 
  * @param flags: Flags used for the error handler function. 
  */
-void option_parser(int argc, char **argv, int *count, cmdf_options *current_option, option_parse_function user_parse_function, void *extern_user_variables_struct, cmdf_options *registered_options, char *default_options, PARSER_FLAGS_Typedef flags)
+void option_parser(int argc, char **argv, int *count, cmdf_option *current_option, option_parse_function user_parse_function, void *extern_user_variables_struct, cmdf_option *registered_options, char *default_options, PARSER_FLAGS_Typedef flags)
 {
     int arguments_to_take = current_option->argq;
     char *current_argument = NULL;
@@ -539,14 +539,14 @@ void set_cmdf_default_info_contact_info(const char *info_string)
  * @brief Main library function, used to parse options in main program.
  * The "cdmf_parse_options" function will call the user defined function to handle actions as desired.
  * Each call will have a key and argument, where each argument must have be assigned to only one key.
- * @param registered_options: Receives pointer to struct "cmdf_options" array that shall contain user define options.
+ * @param registered_options: Receives pointer to struct "cmdf_option" array that shall contain user define options.
  * @param parse_function: User defined parse function pointer.
  * @param argc: Main function parameter containing number of passed parameters in command line.
  * @param argv: Main function parameter containing the array of string containing the actual parameters.
  * @param flags: Flags used to customize the function "cdmf_parse_options" behavior, flags shall be located on "PARSER_FLAGS_Typedef" enumerator.
  * @param extern_user_variables_struct: Opaque pointer to user define struct in main program, used to be accessed in the also user define parser function.
  */
-int cdmf_parse_options(cmdf_options *registered_options, option_parse_function user_parse_function, int argc, char **argv, PARSER_FLAGS_Typedef flags, void *extern_user_variables_struct)
+int cdmf_parse_options(cmdf_option *registered_options, option_parse_function user_parse_function, int argc, char **argv, PARSER_FLAGS_Typedef flags, void *extern_user_variables_struct)
 {
     if(argc >= MAX_CMD_ARGUMENTS)
         error_handler_parse_options_internal(flags, "The maximum number of (%d) arguments was passed.\n", MAX_CMD_ARGUMENTS);
@@ -565,7 +565,7 @@ int cdmf_parse_options(cmdf_options *registered_options, option_parse_function u
 
     parse_registered_options(&registered_options, flags, options_required_matrix, options_registered_array, options_default_array);
 
-    cmdf_options *current_option = NULL;
+    cmdf_option *current_option = NULL;
 
     // run for every argument passed on cmd
     i = 1; // to the first cmd argument after the programs name
@@ -657,7 +657,7 @@ int cdmf_parse_options(cmdf_options *registered_options, option_parse_function u
         {
             if(strpbrk(options_passed_array,options_required_matrix[i]) == NULL)
             {
-                cmdf_options *required_option = get_option_by_key(options_required_matrix[i][0], registered_options);
+                cmdf_option *required_option = get_option_by_key(options_required_matrix[i][0], registered_options);
                 error_handler_parse_options_internal(flags, "The option -%c / --%s needs to be specified.\n",required_option->key,required_option->long_name);
             }
 

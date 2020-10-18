@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['set_5fcmdf_5fdefault_5finfo_5fcontact_5finfo_32',['set_cmdf_default_info_contact_info',['../cmd__friend_8c.html#ab3f4268c8a19fb46f8efe86b51f104bb',1,'set_cmdf_default_info_contact_info(const char *info_string):&#160;cmd_friend.c'],['../cmd__friend_8h.html#ab3f4268c8a19fb46f8efe86b51f104bb',1,'set_cmdf_default_info_contact_info(const char *info_string):&#160;cmd_friend.c']]],
-  ['set_5fcmdf_5fdefault_5finfo_5fusage_33',['set_cmdf_default_info_usage',['../cmd__friend_8c.html#ab14c8e1d80d178ce0e8e8a3936d1efec',1,'set_cmdf_default_info_usage(const char *info_string):&#160;cmd_friend.c'],['../cmd__friend_8h.html#ab14c8e1d80d178ce0e8e8a3936d1efec',1,'set_cmdf_default_info_usage(const char *info_string):&#160;cmd_friend.c']]],
-  ['set_5fcmdf_5fdefault_5finfo_5fversion_34',['set_cmdf_default_info_version',['../cmd__friend_8c.html#abf1a7ca4f27b5cb7bb5d6420431131fe',1,'set_cmdf_default_info_version(const char *info_string):&#160;cmd_friend.c'],['../cmd__friend_8h.html#abf1a7ca4f27b5cb7bb5d6420431131fe',1,'set_cmdf_default_info_version(const char *info_string):&#160;cmd_friend.c']]],
-  ['strcat_5fchar_35',['strcat_char',['../cmd__friend_8c.html#a629ba094147d5619904869f2cf5c993b',1,'cmd_friend.c']]]
+  ['option_5falias_24',['OPTION_ALIAS',['../cmd__friend_8h.html#a64d7da8181d150cf20afae878cee0ecea4adbd1e70364982cd74ed0d787d4f299',1,'cmd_friend.h']]],
+  ['option_5fhidden_25',['OPTION_HIDDEN',['../cmd__friend_8h.html#a64d7da8181d150cf20afae878cee0ecea14b1a5e8414b83f6c070c3d4ab8d4226',1,'cmd_friend.h']]],
+  ['option_5fno_5fchar_5fkey_26',['OPTION_NO_CHAR_KEY',['../cmd__friend_8h.html#a64d7da8181d150cf20afae878cee0eceac384efc68e4a8b3c0a72b5ea15999d90',1,'cmd_friend.h']]],
+  ['option_5fno_5flong_5fkey_27',['OPTION_NO_LONG_KEY',['../cmd__friend_8h.html#a64d7da8181d150cf20afae878cee0ecea4119b7b7c9b2675f3d2b945647dbcb51',1,'cmd_friend.h']]],
+  ['option_5foptional_28',['OPTION_OPTIONAL',['../cmd__friend_8h.html#a64d7da8181d150cf20afae878cee0ecea4eaff09fbc7042cb05e653f98a5e2855',1,'cmd_friend.h']]],
+  ['option_5fparse_5ffunction_29',['option_parse_function',['../cmd__friend_8h.html#ae515e2c2ff2548a7e88b81a1672b66e0',1,'cmd_friend.h']]],
+  ['option_5fparser_30',['option_parser',['../cmd__friend_8c.html#abe10a396548ea65206525c98200c57bb',1,'cmd_friend.c']]],
+  ['options_5ftypedef_31',['OPTIONS_Typedef',['../cmd__friend_8h.html#a64d7da8181d150cf20afae878cee0ece',1,'cmd_friend.h']]]
 ];

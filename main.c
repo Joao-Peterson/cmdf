@@ -15,7 +15,7 @@
 
 
 //struct containing the program options of the command line.
-cmdf_options options[] = 
+cmdf_option options[] = 
 {
     {"where",   'w', 0,                                             1, "Where to create the project"},
     {"file",    'f', OPTION_ALIAS },
