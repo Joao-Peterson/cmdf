@@ -3,11 +3,10 @@
 # Date of creation: 12.08.2020
 # 
 # Usage:
-# - Compile and build as debug:                      			  - "make" or "make build"
-# - Compile and build as release:                    			  - "make release"
-# - Clear dependencie, compressed, object and executable files:   - "make clear"
-# - Compress and pack binaries and specified files:  			  - "make pack"
-# - Generates doxygen documentation:                 			  - "make doc"
+# - Compile lib as debug:                      			- "make build"
+# - Compile lib as release:                    			- "make release"
+# - Clear dependencies and object files:			   	- "make clear"
+# - Clear dependencies, object, .exe, .dll, .a files:	- "make clearall"
 
 # Main program
 LIB_NAME = libcmdf
@@ -64,6 +63,7 @@ build: lib
 
 # Compile lib
 lib : $(OBJECT_FILES)
+	rm -r $(LIB_EXPORT_PATH)
 	mkdir $(LIB_EXPORT_PATH)
 	@echo Archiving static library...
 	$(AR_UTILITY) $(AR_FLAGS) $(LIB_EXPORT_PATH)/$(LIB_NAME).a $^ 

@@ -148,15 +148,19 @@ extern "C" {
 #include <stdarg.h>
 #include <string.h>
 
+
 /* -------------------------------------------- Definitions ---------------------------------------------------- */
 
-#define _INFO_KEY 123       // default info option key
-#define _VERSION_KEY 124    // default version option key
-#define _HELP_KEY 'h'       // default help option key, in case of the 'h' key be desired i suggest using 125 as a key instead
+
+#define __INFO_KEY       123     // default info option key
+#define __VERSION_KEY    124     // default version option key
+#define __HELP_KEY       125     // default help option key, in case of the 'h' key be desired i suggest using 125 as a key instead
 
 #define MAX_CMD_ARGUMENTS 1000 // maximum number of arguments to be parsed
 
+
 /* -------------------------------------------- Enumerators ---------------------------------------------------- */
+
 
 /**
  * @brief Parameters for registering cmd options.
@@ -183,11 +187,13 @@ typedef enum
     //PARSER_FLAG_NOT_EXIT_ON_ERROR                   = 0x01,     /**< When an exception occurs don't exit program */
     PARSER_FLAG_PRINT_ERRORS_STDOUT                 = 0x02,     /**< Print error messages to stdout */
     PARSER_FLAG_PRINT_ERRORS_STDERR                 = 0x04,     /**< Print error messages to stderr */
-    PARSER_FLAG_DONT_IGNORE_NON_REGISTERED_OPTIONS  = 0x08,     /**< Extra options given by the user do not are discarted, a error will be trown */
-    PARSER_FLAG_USE_PREDEFINED_OPTIONS              = 0x10      /**< Create automatic --help (-h), --info, --version */
-}cdmf_PARSER_FLAGS_Typedef;
+    PARSER_FLAG_DONT_IGNORE_NON_REGISTERED_OPTIONS  = 0x08,     /**< Extra options given by the user do not are discarted, an error will be trown */
+    PARSER_FLAG_USE_PREDEFINED_OPTIONS              = 0x10      /**< Create automatic options, by default: --help (-h), --info (-i), --version (-v) */
+}PARSER_FLAGS_Typedef;
+
 
 /* -------------------------------------------- Structures and typedefs----------------------------------------- */
+
 
 /**
  * @brief Typedef from user parse option function.
@@ -212,13 +218,15 @@ typedef int (*option_parse_function)(char key, char *arg, int arg_pos, void *ext
 typedef struct
 {
     char *long_name;                                /**< The name of the option, also used when calling with "--" */
-    char key;                                       /**< Small char key correponding to the name, often just the first character. Called with "-". If the option doesn't need a alphabetical key then specify a integer value ">0" and "!=(ASCII letter number)" as means to identification */
+    char key;                                       /**< Character key correponding to the name, often just the first letter. Called with "-". If the option doesn't need a alphabetical key then specify a integer value ">0" and "!=(ASCII letter)" as means to identification */
     cdmf_OPTIONS_Typedef parameters;                /**< Parameters to enhance functionality */
     int argq;                                       /**< The number of arguments that this option takes, can be >0, if 0 then expects none, if -1 accepts any quantity but at least one */
     char *description;                              /**< Small description of the option*/
 }cmdf_options;
 
+
 /* -------------------------------------------- Public prototypes ---------------------------------------------- */
+
 
 /**
  * @brief Set default value of cmdf_default_info_usage.
@@ -249,19 +257,11 @@ void set_cmdf_default_info_contact_info(const char *info_string);
  * @param parse_function: User defined parse function pointer.
  * @param argc: Main function parameter containing number of passed parameters in command line.
  * @param argv: Main function parameter containing the array of string containing the actual parameters.
- * @param flags: Flags used to customize the function "cdmf_parse_options" behavior, flags shall be located on "cdmf_PARSER_FLAGS_Typedef" enumerator.
+ * @param flags: Flags used to customize the function "cdmf_parse_options" behavior, flags shall be located on "PARSER_FLAGS_Typedef" enumerator.
  * @param extern_user_variables_struct: Opaque pointer to user define struct in main program, used to be accessed in the also user define parser function.
  * @return Returns a integer number correponding to a error code, 0 if no error occurred. Note: NO ERROR CODE IMPLEMENTED AT THIS VERSION.
  */
-int cdmf_parse_options(cmdf_options *registered_options, option_parse_function parse_function, int argc, char **argv, cdmf_PARSER_FLAGS_Typedef flags, void *extern_user_variables_struct);
-
-
-/**
- * @brief Default option parser.
- * @param key: Char key of defined function.
- * @param user_options: User define options array, used for printing them in --help option.
- */
-void default_options_parser(char key, cmdf_options *user_options);
+int cdmf_parse_options(cmdf_options *registered_options, option_parse_function parse_function, int argc, char **argv, PARSER_FLAGS_Typedef flags, void *extern_user_variables_struct);
 
 
 #endif

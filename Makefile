@@ -3,11 +3,11 @@
 # Date of creation: 10.08.2020
 # 
 # Usage:
-# - Compile and build as debug:                      			  - "make" or "make build"
-# - Compile and build as release:                    			  - "make release"
-# - Clear dependencie, compressed, object and executable files:   - "make clear"
-# - Compress and pack binaries and specified files:  			  - "make pack"
-# - Generates doxygen documentation:                 			  - "make doc"
+# - Compile and build as debug:                      			  	- "make" or "make build"
+# - Clear then compile and build as debug:                      	- "make rebuild"
+# - Compile and build as release:                    			  	- "make release"
+# - Clear dependencie, compressed, object and executable files:   	- "make clear"
+# - Compress and pack binaries and specified files:  			  	- "make pack"
 
 # Main program
 MAIN_EXE = main
@@ -16,17 +16,17 @@ VERSION = v1.0
 # Compiler definitions :
 CC = gcc
 CFLAGS = -std=c11 $(HEADERS_PATH)
-LFLAGS = $(LIB_PATH) $(LIBS)
+LFLAGS = -L$(LIB_PATH) $(LIBS)
 
 # Directories :
 HEADERS_PATH =
-LIB_PATH =
+LIB_PATH = ./
 MODULES_PATH = modules
 RELEASE_DIR = releases/
 
 # Libraries :
 LIBS =
-LIBS +=
+#LIBS += modules/cmd_friend/lib/libcmdf.a
 
 # Tools :
 TAR_UTILITY = tar
@@ -36,6 +36,8 @@ PACK_FILES = $(MAIN_EXE).exe
 
 
 # END OF USER AREA --------------------------------------------------------------------------------------------
+
+CC_AS =
 
 # Recursive wildcard definition :
 rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) \
@@ -68,11 +70,11 @@ pack: clear release
 	@echo Done packing.
 
 # Compile as release, overloading $(MAIN_EXE) rule with -Ofast
-release: CC += -Ofast 
+release: CC_AS += -Ofast 
 release: $(MAIN_EXE).exe
 
 # Compile as debug (default), overloading $(MAIN_EXE) rule with -g
-build: CC += -g 
+build: CC_AS += -g 
 build: $(MAIN_EXE).exe
 
 # Compile .exe
@@ -102,5 +104,5 @@ clearall : $(SOURCE_FILES)
 # General rule for compiling source files found in $(OBJECT_FILES), derived from $(SOURCE_FILES) in %(MODULES_PATH)
 %.o : %.c
 	@echo Compiling... $<
-	$(CC) $(CFLAGS) -c $< $(DEP_FLAGS) -o $@ 
+	$(CC) $(CC_AS) $(CFLAGS) -c $< $(DEP_FLAGS) -o $@ 
 -include $(DEPENDENCE_FILES)
