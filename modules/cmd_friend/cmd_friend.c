@@ -345,10 +345,10 @@ void parse_registered_options(cmdf_option **options_array_ptr, PARSER_FLAGS_Type
         }
 
         if( (options_array[options_len].parameters & OPTION_NO_CHAR_KEY) && is_letter(options_array[options_len].key)) // if no char key, then it must check to see if the key is a non assci letter
-            error_handler_parse_options_internal(flags, "An option with (OPTION_NO_CHAR_KEY) specified must be a non ascii alphabetical character. Option: -%c / --%s.\n",options_array[options_len].key,options_array[options_len].long_name);
+            error_handler_parse_options_internal(flags, "An option with (OPTION_NO_CHAR_KEY) specified must be a non ascii alphabetical character. Option: -%c / --%s.\n", options_array[options_len].key, options_array[options_len].long_name);
 
         if( !(options_array[options_len].parameters & OPTION_NO_CHAR_KEY) && !is_letter(options_array[options_len].key)) // if char key, then it must check to see if the key is a asci letter
-            error_handler_parse_options_internal(flags, "An option with a specified char key must be a ascii alphabetical character. Option: -%c / --%s.\n",options_array[options_len].key,options_array[options_len].long_name);
+            error_handler_parse_options_internal(flags, "An option with a specified char key must be a ascii alphabetical character. Option: --%s.\n", options_array[options_len].long_name);
 
         
 
@@ -442,7 +442,11 @@ void option_parser(int argc, char **argv, int *count, cmdf_option *current_optio
 
         if(current_argument[0] == '-') // and option was given after the current one
         {
-            error_handler_parse_options_internal(flags, "The option -%c / --%s needs at least one valid argument.\n", current_option->key, current_option->long_name);
+            if(current_option->parameters & OPTION_NO_CHAR_KEY)
+                error_handler_parse_options_internal(flags, "The option --%s needs at least one valid argument.\n", current_option->long_name);
+            else
+                error_handler_parse_options_internal(flags, "The option -%c / --%s needs at least one valid argument.\n", current_option->key, current_option->long_name);
+
             return;
         }
 
@@ -489,11 +493,17 @@ void option_parser(int argc, char **argv, int *count, cmdf_option *current_optio
 
         if(arg_counter > arguments_to_take)
         {
-            error_handler_parse_options_internal(flags, "The option -%c / --%s has too many arguments, it only receives \"%i\" many.\n",current_option->key,current_option->long_name,current_option->argq);
+            if(current_option->parameters & OPTION_NO_CHAR_KEY)
+                error_handler_parse_options_internal(flags, "The option --%s has too many arguments, it only receives \"%i\" many.\n", current_option->long_name,current_option->argq);
+            else
+                error_handler_parse_options_internal(flags, "The option -%c / --%s has too many arguments, it only receives \"%i\" many.\n",current_option->key,current_option->long_name,current_option->argq);
         }
         else if(arg_counter < arguments_to_take)
         {
-            error_handler_parse_options_internal(flags, "The option -%c / --%s has too few arguments, it expects at least \"%i\".\n",current_option->key,current_option->long_name,current_option->argq);
+            if(current_option->parameters & OPTION_NO_CHAR_KEY)
+                error_handler_parse_options_internal(flags, "The option --%s has too few arguments, it expects at least \"%i\".\n",current_option->long_name,current_option->argq);
+            else
+                error_handler_parse_options_internal(flags, "The option -%c / --%s has too few arguments, it expects at least \"%i\".\n",current_option->key,current_option->long_name,current_option->argq);
         }
 
         (*count)--; // goes back by one, because we need to re read the new option
@@ -666,7 +676,11 @@ int cdmf_parse_options(cmdf_option *registered_options, option_parse_function us
             if(strpbrk(options_passed_array,options_required_matrix[i]) == NULL)
             {
                 cmdf_option *required_option = get_option_by_key(options_required_matrix[i][0], registered_options);
-                error_handler_parse_options_internal(flags, "The option -%c / --%s needs to be specified.\n",required_option->key,required_option->long_name);
+
+                if(required_option->parameters & OPTION_NO_CHAR_KEY)
+                    error_handler_parse_options_internal(flags, "The --%s needs to be specified.\n", required_option->long_name);
+                else
+                    error_handler_parse_options_internal(flags, "The option -%c / --%s needs to be specified.\n",required_option->key,required_option->long_name);
             }
 
             i++;
