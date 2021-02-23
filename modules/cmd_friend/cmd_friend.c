@@ -327,14 +327,22 @@ void parse_registered_options(cmdf_option **options_array_ptr, PARSER_FLAGS_Type
         // Duplicates
         if(strchr(all_keys, options_array[options_len].key) == NULL) // if the key is not a DUPLICATE
             strcat_char(all_keys, options_array[options_len].key); // cat key
-        else
-            error_handler_parse_options_internal(flags, "The key -%c from option --%s is already registered by another option.\n", options_array[options_len].key, options_array[options_len].long_name);
+        else{
+            if(options_array[options_len].parameters & OPTION_NO_CHAR_KEY)
+                error_handler_parse_options_internal(flags, "The option --%s 'key' is already registered by another option.\n", options_array[options_len].long_name);
+            else
+                error_handler_parse_options_internal(flags, "The key -%c from option --%s is already registered by another option.\n", options_array[options_len].key, options_array[options_len].long_name);
+        }
 
 
 
         // Key ascii check
-        if(options_array[options_len].key == 0)
-            error_handler_parse_options_internal(flags,"The option -%c / --%s have the char key set to 0, the 0 key is reserved, please change to another int or char.\n",options_array[options_len].key,options_array[options_len].long_name);
+        if(options_array[options_len].key == 0){
+            if(options_array[options_len].parameters & OPTION_NO_CHAR_KEY)
+                error_handler_parse_options_internal(flags,"The option --%s have the char key set to 0, the 0 key is reserved, please change to another int or char.\n",options_array[options_len].key,options_array[options_len].long_name);
+            else
+                error_handler_parse_options_internal(flags,"The option -%c / --%s have the char key set to 0, the 0 key is reserved, please change to another int or char.\n",options_array[options_len].key,options_array[options_len].long_name);
+        }
 
         if( (options_array[options_len].parameters & OPTION_NO_CHAR_KEY) && is_letter(options_array[options_len].key)) // if no char key, then it must check to see if the key is a non assci letter
             error_handler_parse_options_internal(flags, "An option with (OPTION_NO_CHAR_KEY) specified must be a non ascii alphabetical character. Option: -%c / --%s.\n",options_array[options_len].key,options_array[options_len].long_name);

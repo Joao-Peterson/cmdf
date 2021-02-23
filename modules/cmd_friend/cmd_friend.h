@@ -227,7 +227,7 @@ typedef struct
 {
     char *long_name;                                /**< The name of the option, also used when calling with "--" */
     char key;                                       /**< Character key correponding to the name, often just the first letter. Called with "-". If the option doesn't need a alphabetical key then specify a integer value ">0" and "!=(ASCII letter)" as means to identification */
-    OPTIONS_Typedef parameters;                /**< Parameters to enhance functionality */
+    OPTIONS_Typedef parameters;                     /**< Parameters to enhance functionality */
     int argq;                                       /**< The number of arguments that this option takes, can be >0, if 0 then expects none, if -1 accepts any quantity but at least one */
     char *description;                              /**< Small description of the option*/
 }cmdf_option;
