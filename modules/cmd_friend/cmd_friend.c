@@ -678,7 +678,7 @@ int cdmf_parse_options(cmdf_option *registered_options, option_parse_function us
                 cmdf_option *required_option = get_option_by_key(options_required_matrix[i][0], registered_options);
 
                 if(required_option->parameters & OPTION_NO_CHAR_KEY)
-                    error_handler_parse_options_internal(flags, "The --%s needs to be specified.\n", required_option->long_name);
+                    error_handler_parse_options_internal(flags, "The --%s option needs to be specified.\n", required_option->long_name);
                 else
                     error_handler_parse_options_internal(flags, "The option -%c / --%s needs to be specified.\n",required_option->key,required_option->long_name);
             }
