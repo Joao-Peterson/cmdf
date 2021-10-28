@@ -63,13 +63,14 @@ build: lib
 
 # Compile lib
 lib : $(OBJECT_FILES)
-	rm -r $(LIB_EXPORT_PATH)
+	rm -rf $(LIB_EXPORT_PATH)
 	mkdir $(LIB_EXPORT_PATH)
 	@echo Archiving static library...
 	$(AR_UTILITY) $(AR_FLAGS) $(LIB_EXPORT_PATH)/$(LIB_NAME).a $^ 
-	@echo Linking shared library...
-	$(CC) -shared -o $(LIB_EXPORT_PATH)/$(LIB_NAME).dll $^ 
-	@echo Done Building.
+	
+# @echo Linking shared library...
+# $(CC) -shared -o $(LIB_EXPORT_PATH)/$(LIB_NAME).dll $^ 
+# @echo Done Building.
 
 # Clear dependencie, libraries, object and executable files
 clear : 
