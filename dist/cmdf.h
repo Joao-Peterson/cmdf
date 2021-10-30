@@ -125,7 +125,7 @@
 
 
 /**
- * @file cmd_friend.h
+ * @file cmdf.h
  * 
  * CMD_Friend - The Command line friend library!
  * 

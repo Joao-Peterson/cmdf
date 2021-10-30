@@ -1,5 +1,5 @@
 /**
- * @file cmd_friend.c
+ * @file cmdf.c
  * 
  * CMD_Friend - The Command line friend library!
  * 
@@ -17,7 +17,7 @@ extern "C" {
 #endif 
 
 
-#include "cmd_friend.h"
+#include "cmdf.h"
 
 
 /**

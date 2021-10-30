@@ -1,108 +1,89 @@
-# Project: cmd_friend
-# Author: João Peterson Scheffer
-# Date of creation: 10.08.2020
+# ---------------------------------------------------------------
+# https://www.rapidtables.com/code/linux/gcc/gcc-l.html <- how to link libs
 # 
-# Usage:
-# - Compile and build as debug:                      			  	- "make" or "make build"
-# - Clear then compile and build as debug:                      	- "make rebuild"
-# - Compile and build as release:                    			  	- "make release"
-# - Clear dependencie, compressed, object and executable files:   	- "make clear"
-# - Compress and pack binaries and specified files:  			  	- "make pack"
+# Commands:
+# 	build 		: build lib objects and test files 
+# 	release 	: build lib objects, archive and organize the lib files for use in the 'dist/' folder
+# 	dist 		: dist just organizes the lib files for use in the 'dist/' folder
+# 	clear 		: clear compiled executables
+# 	clearall 	: clear compiled objects and lib files in 'build/' and 'dist/' folders as well as executables
+# 	install  	: installs bianries, includes and libs to the specified "INSTALL_" path variables
 
-# Main program
-MAIN_EXE = main
-VERSION = v1.2
+CC := gcc
 
-# Compiler definitions :
-CC = gcc
-CFLAGS = -std=c11 $(HEADERS_PATH)
-LFLAGS = -L$(LIB_PATH) $(LIBS)
+C_FLAGS :=
 
-# Directories :
-HEADERS_PATH =
-LIB_PATH = ./
-MODULES_PATH = modules
-RELEASE_DIR = releases/
+I_FLAGS :=
+I_FLAGS += -Iinc
 
-# Libraries :
-LIBS =
-#LIBS += modules/cmd_friend/lib/libcmdf.a
+L_FLAGS :=
 
-# Tools :
-TAR_UTILITY = tar
-TAR_ARG = -c -v -z -f
-TAR_NAME = $(RELEASE_DIR)$(MAIN_EXE)_Win_x86_64_$(VERSION).tar.gz
-PACK_FILES = $(MAIN_EXE).exe
+TEST_EXE:= main.exe
+TEST_SOURCE := main.c
+
+SOURCES := src/cmdf.c 
+SOURCES +=
+
+HEADERS := inc/cmdf.h 
+HEADERS +=
+
+LIB_NAME := libcmdf.a
+
+DIST_DIR := dist/
+BUILD_DIR := build/
+
+ARCHIVER := ar -rcs
+
+INSTALL_BIN_DIR := /usr/local/bin
+INSTALL_LIB_DIR := /usr/local/lib
+INSTALL_INC_DIR := /usr/local/include
+
+# ---------------------------------------------------------------
+
+# rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) \
+#   $(filter $(subst *,%,$2),$d))
+
+OBJS := $(SOURCES:.c=.o)
+OBJS_BUILD := $(addprefix $(BUILD_DIR), $(OBJS))
+TEST_OBJ := $(BUILD_DIR)$(TEST_SOURCE:.c=.o)
+
+# MAKEFLAGS += --jobs=$(shell nproc)
+# MAKEFLAGS += --output-sync=target
+
+# ---------------------------------------------------------------
+
+.PHONY : build
+
+build : C_FLAGS += -g
+build : $(HEADERS)
+build : $(TEST_OBJ) $(TEST_EXE)
+build : $(OBJS_BUILD) 
+
+release : C_FLAGS += -O2
+release : $(HEADERS)
+release : clearall $(OBJS_BUILD) dist
+
+$(BUILD_DIR)%.o : %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(C_FLAGS) $(I_FLAGS) -c $< -o $@
 
 
-# END OF USER AREA --------------------------------------------------------------------------------------------
-
-CC_AS =
-
-# Recursive wildcard definition :
-rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) \
-  $(filter $(subst *,%,$2),$d))
+dist : $(OBJS_BUILD)
+	@mkdir -p $(DIST_DIR)
+	$(ARCHIVER) $(DIST_DIR)$(LIB_NAME) $^
+	cp $(HEADERS) $(DIST_DIR)
 
 
-# Source files to find :
-SOURCE_FILES += $(call rwildcard,./$(MODULES_PATH)/,*.c) # list the source files recursively in ./$(MODULES_PATH)
-SOURCE_FILES += $(wildcard *.c) # list source files in main dir
-OBJECT_FILES := $(SOURCE_FILES:.c=.o) # make object files list to compile later 
-DEPENDENCE_FILES := $(OBJECT_FILES:.o=.d) # make dependencie files for each source file, necessary to track modification to header files includeded in each source 
-DEP_FLAGS = -MMD -MF $(@:.o=.d) # Arguments to generate dependency files when compiling
+$(TEST_EXE): $(OBJS_BUILD) $(TEST_OBJ)
+	$(CC) $^ -o $@
 
+install :
+	cp -r dist/*.h $(INSTALL_INC_DIR)/
+	cp -r dist/*.a $(INSTALL_LIB_DIR)/
 
-
-# Rules -------------------------------------------------------------------------------------------------------
-
-
-# Default
-all: build
-
-# Rebuild
-rebuild: clear build
-
-# Pack releaze file using $(TAR_UTILITY)
-pack: clear release
-	@echo Packing...
-	mkdir releases/
-	$(TAR_UTILITY) $(TAR_ARG) $(TAR_NAME) $(PACK_FILES)
-	@echo Done packing.
-
-# Compile as release, overloading $(MAIN_EXE) rule with -Ofast
-release: CC_AS += -Ofast 
-release: $(MAIN_EXE).exe
-
-# Compile as debug (default), overloading $(MAIN_EXE) rule with -g
-build: CC_AS += -g 
-build: $(MAIN_EXE).exe
-
-# Compile .exe
-$(MAIN_EXE).exe : $(OBJECT_FILES) 
-	@echo Building...
-	$(CC) $^ $(LFLAGS) -o $@
-	@echo Done Building.
-
-# Clear dependencie, object and executable files
 clear : 
-	@echo Cleaning...
-	rm -f $(SOURCE_FILES:.c=.o)
-	rm -f $(SOURCE_FILES:.c=.d)
-	rm -f $(MAIN_EXE).exe
-	@echo Done cleaning.
+	rm -f $(EXE)
 
-# Clear dependencie, compressed, documentation, object and executable files
-clearall : $(SOURCE_FILES)
-	@echo Cleaning...
-	rm -f $(SOURCE_FILES:.c=.o)
-	rm -f $(SOURCE_FILES:.c=.d)
-	rm -f $(TAR_NAME)
-	rm -f -r doc/html
-	rm -f $(MAIN_EXE).exe
-	@echo Done cleaning.
-
-# General rule for compiling source files found in $(OBJECT_FILES), derived from $(SOURCE_FILES) in %(MODULES_PATH)
-%.o : %.c
-	@echo Compiling... $<
-	$(CC) $(CC_AS) $(CFLAGS) -c $< $(DEP_FLAGS) -o $@ 
--include $(DEPENDENCE_FILES)
+clearall : clear
+	rm -f -r $(BUILD_DIR)*
+	rm -f -r $(DIST_DIR)*

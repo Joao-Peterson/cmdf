@@ -1,8 +1,9 @@
-*.code-workspace
-
 .vscode/
 
 *.exe
 *.o
 *.d
 *.pl
+*.a
+*.dll
+main

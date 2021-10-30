@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>
-#include "modules/cmd_friend/cmd_friend.h"
+#include "cmdf.h"
 
 // keys for options that don't have alphabetical short keys 
 #define VSCODE_KEY 2 
